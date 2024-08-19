@@ -1,12 +1,17 @@
 "use client";
-import React, { useEffect, useState } from 'react';
-import { usePathname } from 'next/navigation';
+import React, { useEffect, useState } from "react";
+import { usePathname } from "next/navigation";
+import Image from "next/image";
+import { useDispatch } from "react-redux";
+import { addItemToCart } from "@/features/cartSlice";
 
-const ProductPage = () => {
+const SinglePage = () => {
   const pathname = usePathname();
   const productName = pathname.split('/').pop(); // Извлекаем имя продукта из URL
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     async function fetchProduct() {
@@ -15,12 +20,16 @@ const ProductPage = () => {
         const response = await fetch(`/api/products?name=${productName}`);
         if (response.ok) {
           const data = await response.json();
-          setProduct(data);
+          if (data) {
+            setProduct(data);
+          } else {
+            setError('Product not found');
+          }
         } else {
-          console.error('Product not found');
+          setError('Product not found');
         }
       } catch (error) {
-        console.error('Error fetching product:', error);
+        setError('Error fetching product');
       } finally {
         setLoading(false);
       }
@@ -29,12 +38,29 @@ const ProductPage = () => {
     fetchProduct();
   }, [productName]);
 
+  const addToCartHandler = () => {
+    try {
+      dispatch(addItemToCart({
+        id: product.name.toLowerCase().replace(/\s+/g, '-'),
+        name: product.name,
+        price: product.price,
+        imageUrl: product.imageUrl,
+      }));
+    } catch (error) {
+      setError('Failed to add item to cart');
+    }
+  };
+
   if (loading) {
-    return <div>Loading...</div>;
+    return <div className="flex items-center justify-center min-h-screen">Loading...</div>;
+  }
+
+  if (error) {
+    return <div className="flex items-center justify-center min-h-screen text-red-500">{error}</div>;
   }
 
   if (!product) {
-    return <div>Product not found</div>;
+    return <div className="flex items-center justify-center min-h-screen">Product not found</div>;
   }
 
   return (
@@ -42,7 +68,14 @@ const ProductPage = () => {
       <div className="max-w-4xl mx-auto bg-background p-8 rounded-lg shadow-lg">
         <div className="flex flex-col items-center md:flex-row">
           <div className="md:w-1/2 mb-6 md:mb-0">
-            <img src={product.imageUrl} alt={product.name} className="w-full h-auto rounded-lg shadow-md" />
+            <Image 
+              src={product.imageUrl} 
+              alt={product.name} 
+              objectFit="cover"
+              width={500} 
+              height={500} 
+              className="w-full h-auto rounded-lg shadow-md" 
+            />
           </div>
           <div className="md:w-1/2 md:pl-8">
             <h1 className="text-4xl font-bold mb-4">{product.name}</h1>
@@ -75,7 +108,7 @@ const ProductPage = () => {
               ))}
             </div>
 
-            <button className="mt-8 px-6 py-3 bg-primary text-white rounded-md hover:bg-primary-dark transition-transform duration-300 ease-in-out transform hover:scale-105 shadow-lg focus:outline-none focus:ring-2 focus:ring-primary-light">
+            <button onClick={addToCartHandler} className="mt-8 px-6 py-3 bg-primary text-white rounded-md hover:bg-primary-dark transition-transform duration-300 ease-in-out transform hover:scale-105 shadow-lg focus:outline-none focus:ring-2 focus:ring-primary-light">
               Add to Cart
             </button>
           </div>
@@ -85,4 +118,4 @@ const ProductPage = () => {
   );
 };
 
-export default ProductPage;
+export default SinglePage;

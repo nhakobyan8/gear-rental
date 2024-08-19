@@ -1,8 +1,10 @@
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import Head from 'next/head';
 import '../styles/globals.css';
+import ClientProvider from "@/ClientProvider";
 
-export const metadata = {
+const metadata = {
   title: 'GearRental',
   description: 'Rent top-notch sound equipment at affordable prices.',
   openGraph: {
@@ -23,26 +25,35 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <head>
+      <Head>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta charSet="UTF-8" />
         <link rel="icon" href="/favicon.ico" />
         <title>{metadata.title}</title>
         <meta name="description" content={metadata.description} />
-        {/* Open Graph Meta Tags for Social Media */}
+        {/* Open Graph Meta Tags */}
         <meta property="og:title" content={metadata.openGraph.title} />
         <meta property="og:description" content={metadata.openGraph.description} />
         <meta property="og:url" content={metadata.openGraph.url} />
         <meta property="og:image" content={metadata.openGraph.images[0].url} />
         <meta property="og:image:alt" content={metadata.openGraph.images[0].alt} />
-      </head>
+        <meta property="og:image:width" content={metadata.openGraph.images[0].width} />
+        <meta property="og:image:height" content={metadata.openGraph.images[0].height} />
+        {/* Twitter Meta Tags */}
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content={metadata.title} />
+        <meta name="twitter:description" content={metadata.description} />
+        <meta name="twitter:image" content={metadata.openGraph.images[0].url} />
+      </Head>
       <body className="bg-gradient-to-r from-gray-900 via-gray-700 to-gray-900 text-white antialiased">
         <div className="flex flex-col min-h-screen">
-          <Header />
-          <main className="flex-grow">
-            {children}
-          </main>
-          <Footer />
+          <ClientProvider>
+            <Header />
+            <main className="flex-grow">
+              {children}
+            </main>
+            <Footer />
+          </ClientProvider>
         </div>
       </body>
     </html>

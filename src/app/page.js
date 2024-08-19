@@ -2,6 +2,7 @@ import { memo } from 'react';
 import Link from 'next/link';
 
 const Home = () => {
+
   return (
     <div className="flex flex-col items-center justify-center min-h-screen text-center bg-gradient-to-b from-background-light via-background to-background-light px-6 py-12">
       <div className="min-h-[450px] flex flex-col items-center justify-center">
@@ -51,10 +52,10 @@ const Home = () => {
             { name: 'Mixer B', description: "An advanced mixer that gives you full control over your audio projects." },
             { name: 'Headphones C', description: "High-fidelity headphones that let you hear every nuance." },
           ].map((product, index) => (
-            <div key={index} className="space-y-4 bg-background-light p-6 rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300 ease-in-out">
+            <Link href={`/products/${product.name.toLowerCase().replace(/\s+/g, '-')}`} key={index} className="space-y-4 bg-background-light p-6 rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300 ease-in-out">
               <h3 className="text-xl md:text-2xl font-semibold">{product.name}</h3>
               <p>{product.description}</p>
-            </div>
+            </Link>
           ))}
         </div>
       </section>

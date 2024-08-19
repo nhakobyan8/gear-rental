@@ -1,6 +1,14 @@
 import Link from 'next/link';
 import { FaTwitter, FaFacebookF, FaEnvelope, FaInstagram, FaLinkedinIn } from 'react-icons/fa';
 
+const socialLinks = [
+  { href: 'https://twitter.com', icon: <FaTwitter />, label: 'Twitter' },
+  { href: 'https://facebook.com', icon: <FaFacebookF />, label: 'Facebook' },
+  { href: 'mailto:support@gearrental.com', icon: <FaEnvelope />, label: 'Email' },
+  { href: 'https://instagram.com', icon: <FaInstagram />, label: 'Instagram' },
+  { href: 'https://linkedin.com', icon: <FaLinkedinIn />, label: 'LinkedIn' },
+];
+
 export default function Footer() {
   return (
     <footer className="bg-background-light text-text py-8 shadow-inner">
@@ -8,14 +16,8 @@ export default function Footer() {
         <div className="mb-6">
           <p>&copy; {new Date().getFullYear()} GearRental. All rights reserved.</p>
         </div>
-        <div className="flex justify-center space-x-6">
-          {[
-            { href: 'https://twitter.com', icon: <FaTwitter />, label: 'Twitter' },
-            { href: 'https://facebook.com', icon: <FaFacebookF />, label: 'Facebook' },
-            { href: 'mailto:support@gearrental.com', icon: <FaEnvelope />, label: 'Email' },
-            { href: 'https://instagram.com', icon: <FaInstagram />, label: 'Instagram' },
-            { href: 'https://linkedin.com', icon: <FaLinkedinIn />, label: 'LinkedIn' },
-          ].map((social, index) => (
+        <nav className="flex justify-center space-x-6" role="navigation" aria-label="Social Media Links">
+          {socialLinks.map((social, index) => (
             <Link
               key={index}
               href={social.href}
@@ -27,7 +29,7 @@ export default function Footer() {
               {social.icon}
             </Link>
           ))}
-        </div>
+        </nav>
       </div>
     </footer>
   );

@@ -2,7 +2,6 @@ export async function GET(req) {
   const { searchParams } = new URL(req.url);
   const productName = searchParams.get('name');
 
-  // Пример данных о продуктах
   const products = {
     'microphone-a': {
       name: 'Microphone A',
