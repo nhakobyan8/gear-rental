@@ -14,7 +14,19 @@ const Products = () => {
       setLoading(true);
       try {
         const response = await fetch('/api/products');
-        const data = await response.json();
+
+        if (!response.ok) {
+          throw new Error(`Server error: ${response.statusText}`);
+        }
+
+        const text = await response.text();
+
+        // Проверьте, что тело не пустое перед попыткой распарсить его
+        if (!text) {
+          throw new Error('Received empty response from server');
+        }
+
+        const data = JSON.parse(text); // или используйте response.json() напрямую, если текст не пустой
         setProducts(data);
       } catch (error) {
         console.error('Error fetching products:', error);
@@ -23,12 +35,13 @@ const Products = () => {
       }
     }
 
+
     fetchProducts();
   }, []);
 
   const filteredProducts = React.useMemo(() => {
     return products
-      .filter(product => 
+      .filter(product =>
         (selectedCategory === '' || product.category === selectedCategory) &&
         (selectedBrand === '' || product.brand === selectedBrand)
       )
@@ -40,7 +53,7 @@ const Products = () => {
   }, [products, selectedCategory, selectedBrand, sortOrder]);
 
   return (
-    <div className="min-h-screen bg-background-light text-text px-6 py-12">
+    <div className="min-h-screen bg-background-light text-text px-3 py-12">
       <h1 className="text-4xl font-bold mb-8 text-center">Our Products</h1>
       <div className="mb-8 flex space-y-3 flex-col md:flex-row justify-between items-center">
         <div className="flex space-x-4">

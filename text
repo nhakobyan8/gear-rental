@@ -1,0 +1,40 @@
+Eto ves moy sdelanniy chast. Posle etogo ti vsegda dash mne otveti otnositelno vsego proekta i zaprosov i eshyo kogda ya poproshu status moego proekta tui mne dash tekushiy progress, strukturu proekta i bio. Esli ponyatno mi mojem idti dalshe.
+
+Bio: Creating a commercial website for renting equipment for sound engineers.
+
+Project goals:
+
+To get a commercial website for renting equipment for sound engineers.
+Main tasks:
+
+Implementation of a payment system.
+Implementation of a user authorization system.
+Development of an admin panel.
+Product filtering.
+Development of a contract for receiving goods for rent.
+Implementation of a shopping cart.
+Development of user accounts.
+Technologies used:
+
+MERN stack.
+TailwindCSS.
+Next.js using App Router.
+Redux for state management.
+Main tasks of the server part:
+
+Implementation of API routes in Next.js.
+Integration with a database (for example, MongoDB) via API routes.
+Using server-side rendering (SSR) and static generation (SSG) to optimize performance and SEO.
+Project stages:
+
+Step-by-step work on the frontend.
+Smooth transition to the backend.
+Working with Next.js API routes for server logic.
+Using built-in Next.js capabilities for server rendering and database integration.
+Additional requirements:
+
+The application must be in English.
+Dark-toned design typical for sound engineers.
+Fully responsive and modern component design using TailwindCSS.
+Integration of Google fonts and Font Awesome icons for a better look.
+Updated project structure for better component and style management.

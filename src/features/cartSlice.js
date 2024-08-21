@@ -1,4 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
+import Cookies from 'js-cookie';
 
 const initialState = {
   items: [],
@@ -12,40 +13,59 @@ const cartSlice = createSlice({
     addItemToCart(state, action) {
       const newItem = action.payload;
       const existingItem = state.items.find(item => item.id === newItem.id);
-      state.totalAmount = parseFloat((state.totalAmount + newItem.price).toFixed(2));
       if (!existingItem) {
         state.items.push({
           id: newItem.id,
           name: newItem.name,
+          imageUrl: newItem.imageUrl,
           price: newItem.price,
           quantity: 1,
           totalPrice: newItem.price,
         });
       } else {
         existingItem.quantity++;
-        existingItem.totalPrice = parseFloat((existingItem.totalPrice + newItem.price).toFixed(2));
+        existingItem.totalPrice += newItem.price;
       }
+      state.totalAmount += newItem.price;
+      Cookies.set('cartItems', JSON.stringify(state.items)); 
     },
     removeItemFromCart(state, action) {
       const id = action.payload;
       const existingItem = state.items.find(item => item.id === id);
       if (existingItem) {
-        state.totalAmount -= existingItem.price;
-        if (existingItem.quantity === 1) {
-          state.items = state.items.filter(item => item.id !== id);
-        } else {
-          existingItem.quantity--;
-          existingItem.totalPrice -= existingItem.price;
-        }
+        state.totalAmount -= existingItem.totalPrice;
+        state.items = state.items.filter(item => item.id !== id);
       }
+      Cookies.set('cartItems', JSON.stringify(state.items));
+    },
+    increaseQuantity(state, action) {
+      const id = action.payload;
+      const existingItem = state.items.find(item => item.id === id);
+      if (existingItem) {
+        existingItem.quantity++;
+        existingItem.totalPrice += existingItem.price;
+        state.totalAmount += existingItem.price;
+      }
+      Cookies.set('cartItems', JSON.stringify(state.items)); 
+    },
+    decreaseQuantity(state, action) {
+      const id = action.payload;
+      const existingItem = state.items.find(item => item.id === id);
+      if (existingItem && existingItem.quantity > 1) {
+        existingItem.quantity--;
+        existingItem.totalPrice -= existingItem.price;
+        state.totalAmount -= existingItem.price;
+      }
+      Cookies.set('cartItems', JSON.stringify(state.items)); 
     },
     clearCart(state) {
       state.items = [];
       state.totalAmount = 0;
+      Cookies.remove('cartItems'); 
     },
   },
 });
 
-export const { addItemToCart, removeItemFromCart, clearCart } = cartSlice.actions;
+export const { addItemToCart, removeItemFromCart, increaseQuantity, decreaseQuantity, clearCart } = cartSlice.actions;
 
 export default cartSlice.reducer;
