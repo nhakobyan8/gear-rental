@@ -4,8 +4,7 @@ import Cookies from 'js-cookie';
 const initialState = {
   items: Cookies.get('cartItems') ? JSON.parse(Cookies.get('cartItems')) : [],
   totalAmount: Cookies.get('cartItems')
-    ? JSON.parse(Cookies.get('cartItems')).reduce((total, item) => total + item.totalPrice, 0)
-    : 0,
+    ? JSON.parse(Cookies.get('cartItems')).reduce((total, item) => total + item.totalPrice, 0) : 0,
 };
 
 const cartSlice = createSlice({
