@@ -2,8 +2,10 @@ import { createSlice } from '@reduxjs/toolkit';
 import Cookies from 'js-cookie';
 
 const initialState = {
-  items: [],
-  totalAmount: 0,
+  items: Cookies.get('cartItems') ? JSON.parse(Cookies.get('cartItems')) : [],
+  totalAmount: Cookies.get('cartItems')
+    ? JSON.parse(Cookies.get('cartItems')).reduce((total, item) => total + item.totalPrice, 0)
+    : 0,
 };
 
 const cartSlice = createSlice({
@@ -12,10 +14,10 @@ const cartSlice = createSlice({
   reducers: {
     addItemToCart(state, action) {
       const newItem = action.payload;
-      const existingItem = state.items.find(item => item.id === newItem.id);
+      const existingItem = state.items.find(item => item._id === newItem._id);
       if (!existingItem) {
         state.items.push({
-          id: newItem.id,
+          _id: newItem._id,
           name: newItem.name,
           imageUrl: newItem.imageUrl,
           price: newItem.price,
@@ -27,41 +29,41 @@ const cartSlice = createSlice({
         existingItem.totalPrice += newItem.price;
       }
       state.totalAmount += newItem.price;
-      Cookies.set('cartItems', JSON.stringify(state.items)); 
+      Cookies.set('cartItems', JSON.stringify(state.items));
     },
     removeItemFromCart(state, action) {
       const id = action.payload;
-      const existingItem = state.items.find(item => item.id === id);
+      const existingItem = state.items.find(item => item._id === id);
       if (existingItem) {
         state.totalAmount -= existingItem.totalPrice;
-        state.items = state.items.filter(item => item.id !== id);
+        state.items = state.items.filter(item => item._id !== id);
       }
       Cookies.set('cartItems', JSON.stringify(state.items));
     },
     increaseQuantity(state, action) {
       const id = action.payload;
-      const existingItem = state.items.find(item => item.id === id);
+      const existingItem = state.items.find(item => item._id === id);
       if (existingItem) {
         existingItem.quantity++;
         existingItem.totalPrice += existingItem.price;
         state.totalAmount += existingItem.price;
       }
-      Cookies.set('cartItems', JSON.stringify(state.items)); 
+      Cookies.set('cartItems', JSON.stringify(state.items));
     },
     decreaseQuantity(state, action) {
       const id = action.payload;
-      const existingItem = state.items.find(item => item.id === id);
+      const existingItem = state.items.find(item => item._id === id);
       if (existingItem && existingItem.quantity > 1) {
         existingItem.quantity--;
         existingItem.totalPrice -= existingItem.price;
         state.totalAmount -= existingItem.price;
       }
-      Cookies.set('cartItems', JSON.stringify(state.items)); 
+      Cookies.set('cartItems', JSON.stringify(state.items));
     },
     clearCart(state) {
       state.items = [];
       state.totalAmount = 0;
-      Cookies.remove('cartItems'); 
+      Cookies.remove('cartItems');
     },
   },
 });

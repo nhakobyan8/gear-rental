@@ -10,7 +10,9 @@
   },
   "dependencies": {
     "@reduxjs/toolkit": "^2.2.7",
+    "dotenv": "^16.4.5",
     "js-cookie": "^3.0.5",
+    "mongodb": "^6.8.0",
     "mongoose": "^8.5.3",
     "next": "14.2.5",
     "react": "^18",

@@ -1,13 +1,14 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import Image from "next/image";
 import { useDispatch } from "react-redux";
 import { addItemToCart } from "@/features/cartSlice";
 
 const SinglePage = () => {
   const pathname = usePathname();
-  const productName = pathname.split('/').pop(); // Извлекаем имя продукта из URL
+  const router = useRouter();
+  const productId = pathname.split('/').pop(); // Извлекаем id продукта из URL
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -17,14 +18,10 @@ const SinglePage = () => {
     async function fetchProduct() {
       setLoading(true);
       try {
-        const response = await fetch(`/api/products?name=${productName}`);
+        const response = await fetch(`/api/products/${productId}`); // Запрос продукта по id
         if (response.ok) {
           const data = await response.json();
-          if (data) {
-            setProduct(data);
-          } else {
-            setError('Product not found');
-          }
+          setProduct(data);
         } else {
           setError('Product not found');
         }
@@ -36,19 +33,24 @@ const SinglePage = () => {
     }
 
     fetchProduct();
-  }, [productName]);
+  }, [productId]);
 
   const addToCartHandler = () => {
     try {
       dispatch(addItemToCart({
-        id: product.name.toLowerCase().replace(/\s+/g, '-'),
+        _id: product._id,
         name: product.name,
         price: product.price,
         imageUrl: product.imageUrl,
       }));
+      alert('Product added to cart successfully!');
     } catch (error) {
       setError('Failed to add item to cart');
     }
+  };
+
+  const goBack = () => {
+    router.back();
   };
 
   if (loading) {
@@ -56,25 +58,35 @@ const SinglePage = () => {
   }
 
   if (error) {
-    return <div className="flex items-center justify-center min-h-screen text-red-500">{error}</div>;
+    return (
+      <div className="flex flex-col items-center justify-center min-h-screen text-red-500">
+        <p>{error}</p>
+        <button onClick={goBack} className="mt-4 px-4 py-2 bg-primary text-white rounded-md hover:bg-primary-dark transition-colors">Go Back</button>
+      </div>
+    );
   }
 
   if (!product) {
-    return <div className="flex items-center justify-center min-h-screen">Product not found</div>;
+    return (
+      <div className="flex flex-col items-center justify-center min-h-screen">
+        <p>Product not found</p>
+        <button onClick={goBack} className="mt-4 px-4 py-2 bg-primary text-white rounded-md hover:bg-primary-dark transition-colors">Go Back</button>
+      </div>
+    );
   }
 
   return (
-    <div className="min-h-screen bg-background-light text-text px-6 py-12">
+    <div className="min-h-screen bg-background-light text-text px-3 py-12">
       <div className="max-w-4xl mx-auto bg-background p-8 rounded-lg shadow-lg">
         <div className="flex flex-col items-center md:flex-row">
           <div className="md:w-1/2 mb-6 md:mb-0">
-            <Image 
-              src={product.imageUrl} 
-              alt={product.name} 
+            <Image
+              src={product.imageUrl}
+              alt={product.name}
               objectFit="cover"
-              width={500} 
-              height={500} 
-              className="w-full h-auto rounded-lg shadow-md" 
+              width={500}
+              height={500}
+              className="w-full h-auto rounded-lg shadow-md"
             />
           </div>
           <div className="md:w-1/2 md:pl-8">
@@ -108,9 +120,14 @@ const SinglePage = () => {
               ))}
             </div>
 
-            <button onClick={addToCartHandler} className="mt-8 px-6 py-3 bg-primary text-white rounded-md hover:bg-primary-dark transition-transform duration-300 ease-in-out transform hover:scale-105 shadow-lg focus:outline-none focus:ring-2 focus:ring-primary-light">
-              Add to Cart
-            </button>
+            <div className="mt-8 flex space-x-4">
+              <button onClick={addToCartHandler} className="px-6 py-3 bg-primary text-white rounded-md hover:bg-primary-dark transition-transform duration-300 ease-in-out transform hover:scale-105 shadow-lg focus:outline-none focus:ring-2 focus:ring-primary-light">
+                Add to Cart
+              </button>
+              <button onClick={goBack} className="px-6 py-3 bg-secondary text-white rounded-md hover:bg-secondary-dark transition-transform duration-300 ease-in-out transform hover:scale-105 shadow-lg focus:outline-none focus:ring-2 focus:ring-secondary-light">
+                Go Back
+              </button>
+            </div>
           </div>
         </div>
       </div>

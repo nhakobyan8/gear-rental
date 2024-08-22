@@ -1,8 +1,7 @@
 "use client";
-
 import Image from 'next/image';
 import Link from 'next/link';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import CartModal from '@/components/CartModal';
 
@@ -11,12 +10,17 @@ export default function Header() {
   const totalItems = cartItems.reduce((total, item) => total + item.quantity, 0);
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
+  const [isMounted, setIsMounted] = useState(false)
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
 
   const toggleMenu = () => {
     setIsOpen(!isOpen);
   };
 
-  const toggleCart = () => {    
+  const toggleCart = () => {
     if (isCartOpen) {
       setIsOpen(false);
     }
@@ -27,6 +31,8 @@ export default function Header() {
     setIsOpen(false);
     setIsCartOpen(false);
   };
+
+  if (!isMounted) return;
 
   return (
     <header className="bg-background-light bg-opacity-95 sticky top-0 z-10 text-text shadow-lg">
@@ -58,7 +64,7 @@ export default function Header() {
             ))}
             <li className={`relative cursor-pointer py-2 inline-flex items-center ${totalItems > 0 && "p-3 pl-0"} text-center text-white`} onClick={toggleCart} >
               <span className="flex">Cart</span>
-              {totalItems > 0 && <div className="absolute inline-flex items-center justify-center w-6 h-6 text-xs font-bold text-white bg-primary border-white rounded-full -top-2 -end-2 dark:border-gray-900">{totalItems}</div>}
+              <div className={`absolute inline-flex ${totalItems === 0 && "hidden"} items-center justify-center w-5 h-5 text-xs font-bold text-white bg-primary border-white rounded-full -top-2 -end-2 dark:border-gray-900`}>{totalItems}</div>
             </li>
           </ul>
           <div className="md:hidden">

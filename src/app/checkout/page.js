@@ -17,6 +17,8 @@ export default function Checkout() {
       setCheckoutItems(cartItems.map(item => ({ ...item })));
    }, []);
 
+   console.log(checkoutItems)
+
    const handleStartDateChange = (e) => {
       setStartDate(e.target.value);
       if (endDate && new Date(e.target.value) > new Date(endDate)) {
@@ -32,10 +34,11 @@ export default function Checkout() {
    const totalAmount = checkoutItems.reduce((total, item) => total + (item.totalPrice * totalDays), 0);
 
    const handleCheckout = () => {
-      // Логика оформления заказа
       Cookies.set('hasCheckedOut', 'true');
       router.push('/payment');
    };
+
+   console.log(checkoutItems);
 
    return (
       <div className="container mx-auto p-8">
@@ -49,7 +52,7 @@ export default function Checkout() {
                   <h2 className="text-2xl font-semibold mb-4">Your Items</h2>
                   <ul className="space-y-4">
                      {checkoutItems.map((item) => (
-                        <Link href={`/products/${item.name.toLowerCase().replace(/\s+/g, '-').replace(/[^\w-]+/g, '')}`} key={item.id} className="flex justify-between items-center p-4 bg-background-light rounded-lg shadow-md">
+                        <Link href={`/products/${item._id}`} key={item.id} className="flex justify-between items-center p-4 bg-background-light rounded-lg shadow-md">
                            <div className="flex items-center space-x-4">
                               <Image src={item.imageUrl} alt={item.name} width={80} height={80} className="rounded-lg object-cover" />
                               <div>

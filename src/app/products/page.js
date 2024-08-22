@@ -1,6 +1,6 @@
 "use client";
 import ProductCard from '@/components/ProductCard';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 
 const Products = () => {
   const [products, setProducts] = useState([]);
@@ -8,10 +8,12 @@ const Products = () => {
   const [selectedBrand, setSelectedBrand] = useState('');
   const [sortOrder, setSortOrder] = useState('default');
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     async function fetchProducts() {
       setLoading(true);
+      setError(null);
       try {
         const response = await fetch('/api/products');
 
@@ -19,27 +21,20 @@ const Products = () => {
           throw new Error(`Server error: ${response.statusText}`);
         }
 
-        const text = await response.text();
-
-        // Проверьте, что тело не пустое перед попыткой распарсить его
-        if (!text) {
-          throw new Error('Received empty response from server');
-        }
-
-        const data = JSON.parse(text); // или используйте response.json() напрямую, если текст не пустой
+        const data = await response.json();
         setProducts(data);
       } catch (error) {
+        setError('Failed to load products');
         console.error('Error fetching products:', error);
       } finally {
         setLoading(false);
       }
     }
 
-
     fetchProducts();
   }, []);
 
-  const filteredProducts = React.useMemo(() => {
+  const filteredProducts = useMemo(() => {
     return products
       .filter(product =>
         (selectedCategory === '' || product.category === selectedCategory) &&
@@ -98,6 +93,8 @@ const Products = () => {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
         {loading ? (
           <div className="text-center text-lg">Loading products...</div>
+        ) : error ? (
+          <div className="text-center text-red-500">{error}</div>
         ) : filteredProducts.length > 0 ? (
           filteredProducts.map((product, index) => (
             <ProductCard key={index} product={product} />
