@@ -43,7 +43,6 @@ const SinglePage = () => {
         price: product.price,
         imageUrl: product.imageUrl,
       }));
-      alert('Product added to cart successfully!');
     } catch (error) {
       setError('Failed to add item to cart');
     }
