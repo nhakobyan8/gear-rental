@@ -61,7 +61,7 @@ export default function CartModal({ isCartOpen, toggleCart }) {
                                  <span>{item.quantity}</span>
                                  <button
                                     className="text-white"
-                                    onClick={handleIncreaseQuantity(item._id)}
+                                    onClick={() => handleIncreaseQuantity(item._id)}
                                  >
                                     <CiCirclePlus size={30} />
                                  </button>

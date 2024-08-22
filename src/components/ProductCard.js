@@ -15,6 +15,7 @@ const ProductCard = ({ product }) => {
       price: product.price,
       imageUrl: product.imageUrl,
     }));
+    alert('Product added to cart successfully!');
   };
 
   return (
