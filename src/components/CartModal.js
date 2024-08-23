@@ -28,7 +28,7 @@ export default function CartModal({ isCartOpen, toggleCart }) {
          onClick={toggleCart}
       >
          <div
-            className="relative bg-background p-9 rounded-lg shadow-lg overflow-y-auto"
+            className="relative bg-background p-9 rounded-lg shadow-lg"
             onClick={(e) => e.stopPropagation()}
          >
             <button
@@ -41,7 +41,7 @@ export default function CartModal({ isCartOpen, toggleCart }) {
                <p className="text-center p-10">Your cart is empty</p>
             ) : (
                <div>
-                  <ul className="space-y-10 py-3">
+                  <ul className="space-y-10 max-h-96 overflow-y-auto py-3">
                      {cartItems.map((item) => (
                         <li key={item.id} className="flex  justify-between items-center">
                            <div className="flex justify-between space-x-10 items-center w-full">
