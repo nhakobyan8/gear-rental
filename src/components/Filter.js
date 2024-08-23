@@ -29,7 +29,7 @@ const Filter = ({ products, setFilteredProducts, options }) => {
                aria-label="Select Category"
             >
                <option value="">All Categories</option>
-               {options.categories.map((category) => <option value={category}>{category}</option>)}
+               {options.categories.map((category, i) => <option key={i} value={category}>{category}</option>)}
             </select>
 
             <select
@@ -39,7 +39,7 @@ const Filter = ({ products, setFilteredProducts, options }) => {
                aria-label="Select Brand"
             >
                <option value="">All Brands</option>
-               {options.brands.map((brand) => <option value={brand}>{brand}</option>)}
+               {options.brands.map((brand, i) => <option key={i} value={brand}>{brand}</option>)}
             </select>
          </div>
 
