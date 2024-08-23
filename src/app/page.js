@@ -50,9 +50,9 @@ const Home = () => {
           <h2 className="text-3xl md:text-4xl font-bold text-text">Featured Products</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-10 text-text-muted">
             {[
-              { name: 'Microphone A', description: "A top-tier microphone that captures every detail of your sound.", id: "66c763e832b19badd1442564"},
-              { name: 'Mixer B', description: "An advanced mixer that gives you full control over your audio projects.", id: "66c763e832b19badd1442565"},
-              { name: 'Headphones C', description: "High-fidelity headphones that let you hear every nuance.", id: "66c763e832b19badd1442566"},
+              { name: 'Microphone A', description: "A top-tier microphone that captures every detail of your sound.", id: "66c87a9132b19badd1d9bf68"},
+              { name: 'Mixer B', description: "An advanced mixer that gives you full control over your audio projects.", id: "66c87a9132b19badd1d9bf69"},
+              { name: 'Headphones C', description: "High-fidelity headphones that let you hear every nuance.", id: "66c87a9132b19badd1d9bf6a"},
             ].map((product, index) => (
               <Link href={`/products/${product.id}`} key={index} className="space-y-4 bg-background-light p-6 rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300 ease-in-out">
                 <h3 className="text-xl md:text-2xl font-semibold">{product.name}</h3>

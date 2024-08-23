@@ -64,7 +64,7 @@ export default function Header() {
             ))}
             <li className={`relative cursor-pointer py-2 inline-flex items-center ${totalItems > 0 && "p-3 pl-0"} text-center text-white`} onClick={toggleCart} >
               <span className="flex">Cart</span>
-              <div className={`absolute inline-flex ${totalItems === 0 && "hidden"} items-center justify-center w-5 h-5 text-xs font-bold text-white bg-primary border-white rounded-full -top-2 -end-2 dark:border-gray-900`}>{totalItems}</div>
+              <div className={`absolute inline-flex ${totalItems === 0 && "hidden"} items-center justify-center w-5 h-5 text-xs font-bold text-white bg-primary border-white rounded-full text-center -top-2 -end-2 dark:border-gray-900`}>{totalItems}</div>
             </li>
           </ul>
           <div className="md:hidden">

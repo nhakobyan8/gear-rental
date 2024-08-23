@@ -19,9 +19,9 @@ const ProductCard = ({ product }) => {
   };
 
   return (
-    <div className="bg-background p-6 rounded-lg animate-fade-in-up shadow-lg hover:shadow-2xl transition-all duration-300 cursor-pointer">
+    <div className="bg-background p-5 pt-0 flex flex-col justify-between rounded-lg shadow-lg hover:shadow-2xl transition-all duration-300 cursor-pointer">
       <Link href={productUrl} passHref>
-        <div className="relative h-56 w-full mb-4">
+        <div className="relative h-60 w-full mb-4">
           <Image
             src={product.imageUrl}
             alt={product.name}
@@ -32,7 +32,7 @@ const ProductCard = ({ product }) => {
           />
         </div>
       </Link>
-      <div className="flex flex-col items-center">
+      <div className="flex flex-col items-start justify-between">
         <h3 className="text-xl font-semibold text-center">{product.name}</h3>
         <p className="text-text-muted mt-2 text-center">{product.description}</p>
         <div className="flex w-full justify-between items-center">
