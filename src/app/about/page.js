@@ -8,6 +8,10 @@ export default function About() {
         <title>About GearRental</title>
         <meta name="description" content="Learn more about GearRental, your go-to destination for sound equipment rental. Our mission is to provide high-quality gear with excellent customer service." />
         <meta name="keywords" content="GearRental, sound equipment, rental, customer service" />
+        <meta property="og:title" content="About GearRental" />
+        <meta property="og:description" content="Learn more about GearRental, your go-to destination for sound equipment rental. Our mission is to provide high-quality gear with excellent customer service." />
+        <meta property="og:image" content="/images/about-us.webp" />
+        <meta property="og:type" content="website" />
       </Head>
       <div className="bg-background min-h-screen text-text py-16">
         <div className="container mx-auto px-6 md:px-12 lg:px-24">
@@ -21,6 +25,9 @@ export default function About() {
               alt="Our team"
               width={1200}
               height={500}
+              layout="responsive"
+              priority={true}
+              quality={80}
               className="w-full max-h-[500px] object-cover rounded-lg shadow-lg"
             />
           </div>
@@ -42,7 +49,6 @@ export default function About() {
               </ul>
             </div>
           </div>
-
         </div>
       </div>
     </>

@@ -1,22 +1,30 @@
 import { NextResponse } from "next/server";
+import { getToken } from "next-auth/jwt";
 
-export function middleware(request) {
+export async function middleware(request) {
    const url = request.nextUrl.clone();
    const { pathname } = request.nextUrl;
 
+   const token = await getToken({ req: request, secret: process.env.NEXTAUTH_SECRET });
+
    const isCheckout = pathname.startsWith('/checkout');
    const isPayment = pathname.startsWith('/payment');
+   const isAdminRoute = pathname.startsWith('/admin');
+   const isUserRoute = pathname.startsWith('/user');
 
-   // Проверка, если пользователь пытается получить доступ к /checkout, не имея товаров в корзине
+   if ((isCheckout || isPayment) && !token) {
+      url.pathname = '/auth/';
+      return NextResponse.redirect(url);
+   }
+
    if (isCheckout) {
       const cartItems = request.cookies.get('cartItems');
-      if (!cartItems || cartItems.length === 0) {
+      if (!cartItems || cartItems.value.length === 0) {
          url.pathname = '/';
          return NextResponse.redirect(url);
       }
    }
 
-   // Проверка, если пользователь пытается получить доступ к /payment, не пройдя этап Checkout
    if (isPayment) {
       const hasCheckedOut = request.cookies.get('hasCheckedOut');
       if (!hasCheckedOut) {
@@ -25,10 +33,19 @@ export function middleware(request) {
       }
    }
 
-   // Разрешить доступ, если проверки пройдены
+   if (isAdminRoute && token?.role !== 'admin') {
+      url.pathname = '/account';
+      return NextResponse.redirect(url);
+   }
+
+   if (isUserRoute && token?.role !== 'user') {
+      url.pathname = '/';
+      return NextResponse.redirect(url);
+   }
+
    return NextResponse.next();
 }
 
 export const config = {
-   matcher: ['/checkout', '/payment'],
+   matcher: ['/checkout', '/payment', '/dashboard', '/admin/:path*', '/user/:path*'],
 };

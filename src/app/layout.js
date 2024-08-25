@@ -1,11 +1,11 @@
+import { ClientSessionProvider, ReduxProvider } from "@/providers";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import Head from 'next/head';
-import '../styles/globals.css';
-import 'react-loading-skeleton/dist/skeleton.css';
-import ClientProvider from "@/ClientProvider";
+import "../styles/globals.css";
+import "react-loading-skeleton/dist/skeleton.css";
 
-const metadata = {
+
+export const metadata = {
   title: 'GearRental',
   description: 'Rent top-notch sound equipment at affordable prices.',
   openGraph: {
@@ -26,7 +26,7 @@ const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <Head>
+      <head>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta charSet="UTF-8" />
         <link rel="icon" href="/favicon.ico" />
@@ -45,16 +45,18 @@ export default function RootLayout({ children }) {
         <meta name="twitter:title" content={metadata.title} />
         <meta name="twitter:description" content={metadata.description} />
         <meta name="twitter:image" content={metadata.openGraph.images[0].url} />
-      </Head>
+      </head>
       <body className="bg-gradient-to-r from-gray-900 via-gray-700 to-gray-900 text-white antialiased">
         <div className="flex flex-col min-h-screen">
-          <ClientProvider>
-            <Header />
-            <main className="flex-grow">
-              {children}
-            </main>
-            <Footer />
-          </ClientProvider>
+          <ClientSessionProvider>
+            <ReduxProvider>
+              <Header />
+              <main className="flex-grow">
+                {children}
+              </main>
+              <Footer />
+            </ReduxProvider>
+          </ClientSessionProvider>
         </div>
       </body>
     </html>

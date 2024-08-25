@@ -8,11 +8,10 @@ export default function Payment() {
    const router = useRouter();
 
    const handlePayment = () => {
-      // Здесь должна быть логика для обработки оплаты
       if (paymentMethod) {
          alert(`Payment processed with method: ${paymentMethod}`);
-         Cookies.remove('hasCheckedOut'); // Удаляем cookie, чтобы сбросить состояние checkout
-         router.push('/thank-you'); // Перенаправление на страницу благодарности или другую страницу после успешной оплаты
+         Cookies.remove('hasCheckedOut');
+         router.push('/thank-you'); 
       } else {
          alert('Please select a payment method');
       }

@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import Image from "next/image";
 import { useDispatch } from "react-redux";
@@ -9,34 +9,36 @@ import Skeleton from 'react-loading-skeleton';
 const SinglePage = () => {
   const pathname = usePathname();
   const router = useRouter();
-  const productId = pathname.split('/').pop(); // Извлекаем id продукта из URL
+  const productId = pathname.split('/').pop();
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const dispatch = useDispatch();
 
   useEffect(() => {
-    async function fetchProduct() {
+    const fetchProduct = async () => {
       setLoading(true);
+      setError(null);
       try {
-        const response = await fetch(`/api/products/${productId}`); // Запрос продукта по id
-        if (response.ok) {
-          const data = await response.json();
-          setProduct(data);
-        } else {
-          setError('Product not found');
+        const response = await fetch(`/api/products/${productId}`);
+        if (!response.ok) {
+          throw new Error('Product not found');
         }
+        const data = await response.json();
+        setProduct(data);
       } catch (error) {
-        setError('Error fetching product');
+        setError(error.message || 'Error fetching product');
       } finally {
         setLoading(false);
       }
-    }
+    };
 
     fetchProduct();
   }, [productId]);
 
-  const addToCartHandler = () => {
+  const addToCartHandler = useCallback(() => {
+    if (!product) return;
+
     try {
       dispatch(addItemToCart({
         _id: product._id,
@@ -48,11 +50,11 @@ const SinglePage = () => {
     } catch (error) {
       setError('Failed to add item to cart');
     }
-  };
+  }, [dispatch, product]);
 
-  const goBack = () => {
+  const goBack = useCallback(() => {
     router.back();
-  };
+  }, [router]);
 
   if (loading) {
     return (
@@ -102,6 +104,7 @@ const SinglePage = () => {
               width={500}
               height={500}
               className="w-full h-auto rounded-lg shadow-md"
+              aria-label={product.name}
             />
           </div>
           <div className="md:w-1/2 md:pl-8">
@@ -111,14 +114,14 @@ const SinglePage = () => {
 
             <h2 className="text-2xl font-semibold mb-4">Features</h2>
             <ul className="list-disc list-inside mb-8">
-              {product.features.map((feature, index) => (
+              {product.features?.map((feature, index) => (
                 <li key={index}>{feature}</li>
               ))}
             </ul>
 
             <h2 className="text-2xl font-semibold mb-4">Specifications</h2>
             <ul className="list-inside mb-8">
-              {Object.entries(product.specifications).map(([key, value]) => (
+              {product.specifications && Object.entries(product.specifications).map(([key, value]) => (
                 <li key={key} className="mb-2">
                   <strong>{key.charAt(0).toUpperCase() + key.slice(1)}:</strong> {value}
                 </li>
@@ -127,7 +130,7 @@ const SinglePage = () => {
 
             <h2 className="text-2xl font-semibold mb-4">Customer Reviews</h2>
             <div className="space-y-4">
-              {product.reviews.map((review, index) => (
+              {product.reviews?.map((review, index) => (
                 <div key={index} className="bg-background-light p-4 rounded-lg shadow-md">
                   <p className="text-lg mb-2"><strong>{review.user}</strong> rated it {review.rating} stars</p>
                   <p>{review.comment}</p>

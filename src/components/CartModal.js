@@ -43,7 +43,7 @@ export default function CartModal({ isCartOpen, toggleCart }) {
                <div>
                   <ul className="space-y-10 max-h-96 overflow-y-auto py-3">
                      {cartItems.map((item) => (
-                        <li key={item.id} className="flex  justify-between items-center">
+                        <li key={item._id} className="flex  justify-between items-center">
                            <div className="flex justify-between space-x-10 items-center w-full">
                               <div className="flex items-center space-x-2">
                                  <Image src={item.imageUrl} alt={item.name} width={80} height={80} className="rounded-lg object-cover" />

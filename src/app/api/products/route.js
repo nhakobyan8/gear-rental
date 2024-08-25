@@ -1,45 +1,37 @@
-import connectMongo from "@/lib/db";
+import connectMongo from "@/lib/mongodb";
 import Product from "@/models/Product";
+import { NextResponse } from "next/server";
 
 export async function GET() {
-  await connectMongo();
   try {
+    await connectMongo();
     const products = await Product.find({});
-    return new Response(JSON.stringify(products), {
-      status: 200,
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
+    return NextResponse.json(products, { status: 200 });
   } catch (error) {
-    return new Response(JSON.stringify({ message: `${error}` }), {
-      status: 404,
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
+    return NextResponse.json({ message: `${error}` }, { status: 404 });
   }
 }
 
 export async function POST(req) {
-  await connectMongo();
 
   try {
+    await connectMongo();
     const body = await req.json();
     const product = await Product.create(body);
 
-    return new Response(JSON.stringify(product), {
-      status: 201,
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
+    return NextResponse.json(product, { status: 201 });
   } catch (error) {
-    return new Response(JSON.stringify({ message: `${error}` }), {
-      status: 400,
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
+    return NextResponse.json({ message: `${error}` }, { status: 400 });
+  }
+}
+
+export async function DELETE() {
+
+  try {
+    await connectMongo();
+    await Product.deleteMany({});
+    return NextResponse.json({ message: 'All products deleted successfully' }, { status: 200 });
+  } catch (error) {
+    return NextResponse.json({ message: `Error: ${error.message}` }, { status: 500 });
   }
 }

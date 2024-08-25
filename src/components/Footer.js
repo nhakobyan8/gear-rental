@@ -17,9 +17,9 @@ export default function Footer() {
           <p>&copy; {new Date().getFullYear()} GearRental. All rights reserved.</p>
         </div>
         <nav className="flex justify-center space-x-6" role="navigation" aria-label="Social Media Links">
-          {socialLinks.map((social, index) => (
+          {socialLinks.map((social) => (
             <Link
-              key={index}
+              key={social.href}
               href={social.href}
               className="hover:text-primary-light transition-colors focus:outline-none focus:ring-2 focus:ring-primary-light"
               target="_blank"

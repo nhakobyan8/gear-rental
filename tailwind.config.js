@@ -9,19 +9,22 @@ module.exports = {
     extend: {
       colors: {
         primary: {
-          DEFAULT: '#3B82F6', // Deep blue
-          light: '#93C5FD',
-          dark: '#1D4ED8',
+          DEFAULT: '#3B82F6', // Deep blue, основной цвет для акцентов
+          light: '#93C5FD',  // Светлый оттенок для акцентов
+          dark: '#1D4ED8',   // Темный оттенок для акцентов
         },
         background: {
-          light: '#1F2937', // Dark gray background
-          DEFAULT: '#111827', // Even darker for sections
+          light: '#1F2937',  // Темно-серый фон для секций
+          DEFAULT: '#111827', // Основной темный фон
+          dark: '#0F172A',    // Ещё более темный фон для более глубоких слоёв
         },
         text: {
-          DEFAULT: '#F9FAFB', // Light gray text
-          muted: '#D1D5DB', // Muted gray for secondary text
+          DEFAULT: '#F9FAFB', // Основной цвет текста (светло-серый)
+          muted: '#D1D5DB',   // Цвет для второстепенного текста (ослабленный серый)
+          dark: '#E5E7EB',    // Темный оттенок для текста на светлом фоне
         },
       },
+      // Дополнительные настройки шрифтов, отступов и т.д. можно добавить здесь
     },
   },
   variants: {
