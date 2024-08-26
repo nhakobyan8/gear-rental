@@ -11,7 +11,4 @@ export function ReduxProvider({ children }) {
    return <Provider store={store}>{children}</Provider>;
 }
 
-export default {
-   ClientSessionProvider,
-   ReduxProvider
-}
+export default { ClientSessionProvider, ReduxProvider}

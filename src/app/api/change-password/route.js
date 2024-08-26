@@ -4,6 +4,11 @@ import connectMongo from "@/lib/mongodb";
 import User from "@/models/User";
 import { getToken } from "next-auth/jwt";
 
+const isPasswordComplex = (password) => {
+  const passwordRequirements = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,}$/;
+  return passwordRequirements.test(password);
+};
+
 export async function POST(req) {
   try {
     await connectMongo();
@@ -20,7 +25,6 @@ export async function POST(req) {
     }
 
     const user = await User.findOne({ email: token.email });
-
     if (!user) {
       return NextResponse.json({ message: "User not found" }, { status: 404 });
     }
@@ -30,8 +34,8 @@ export async function POST(req) {
       return NextResponse.json({ message: "Current password is incorrect" }, { status: 400 });
     }
 
-    if (newPassword.length < 8) {
-      return NextResponse.json({ message: "New password must be at least 8 characters long" }, { status: 400 });
+    if (!isPasswordComplex(newPassword)) {
+      return NextResponse.json({ message: "New password must be at least 8 characters long, include letters, numbers, and special characters." }, { status: 400 });
     }
 
     const hashedNewPassword = await bcrypt.hash(newPassword, 10);

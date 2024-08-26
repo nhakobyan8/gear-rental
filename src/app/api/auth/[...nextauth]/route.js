@@ -10,11 +10,6 @@ export const authOptions = {
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-      authorization: {
-        params: {
-          prompt: "select_account",
-        },
-      },
     }),
     CredentialsProvider({
       name: "Credentials",
@@ -42,20 +37,20 @@ export const authOptions = {
   },
   pages: {
     signIn: "/auth",
-    error: "/auth/error",
+    error: "/error",
   },
   callbacks: {
     async signIn({ user }) {
-        await connectMongo();
-        const existingUser = await User.findOne({ email: user.email });
+      await connectMongo();
+      const existingUser = await User.findOne({ email: user.email });
 
-        if (existingUser) {
-          user.id = existingUser._id;
-          user.name = existingUser.username;
-          user.role = existingUser.role;
-        } else {
-          throw new Error("No user found with this email. Please register first.");
-        }
+      if (existingUser) {
+        user.id = existingUser._id;
+        user.name = existingUser.username;
+        user.role = existingUser.role;
+      } else {
+        throw new Error("No user found with this email. Please register first.");
+      }
       return true;
     },
     async jwt({ token, user }) {
@@ -75,5 +70,6 @@ export const authOptions = {
   },
 };
 
-export const GET = NextAuth(authOptions);
-export const POST = NextAuth(authOptions);
+const handler = NextAuth(authOptions);
+
+export { handler as GET, handler as POST };

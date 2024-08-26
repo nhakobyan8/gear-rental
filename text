@@ -43,4 +43,12 @@ narek0808 narekrental
 
 Privet. Ya xochu prodoljit rabotu moego proekta s toboy
 
-teper ya xochu snachala otpravit ves robotu kotoriy ya sdelal dlya etogo proekta chtobi potom prodoljit po scenarie bio
+teper ya xochu snachala otpravit ves robotu kotoriy ya sdelal dlya etogo proekta i dam tebe vse instrukcii po povodu togo kak ya xochu izmenit tekushuyu rabotu chtobi potom prodoljit po scenarie bio. I eshye vsegda komentarii v kode sdelay na angliskom.
+
+Teper u tebya est vse neobxodimie fayli moego proekta. i tak predstavlyayu tebe instrukciyu izmenenie obshego proekta 
+1. Pri registracii proverit pochtu i otpravit kod v pochtu dlya proverki 
+2. Sdelat ves funkcional admina i stranica i api
+3. Izmenit marshruti tak chtobi obichnomu polzovatela ne bilo dostupa k api
+Na etom vsye a posle togo sdelat
+1. Sozdania funkcionala kontrakta mejdu admina i polzovotela naprimer polzovotel otpravit zapros na vibrannuyu arendu s srokami a posle etogo admin reshit odobrit zakaz ili net 
+2. i na posledok proverit esli vye rabotaet korektno dobavit platyejnaya sistema

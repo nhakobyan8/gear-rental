@@ -1,8 +1,6 @@
-// src/lib/mongodb.js
-
 import mongoose from 'mongoose';
 import bcrypt from 'bcrypt';
-import User from '@/models/User';  // Подключите модель пользователя
+import User from '@/models/User';
 
 const connectMongo = async () => {
   if (mongoose.connection.readyState >= 1) return;

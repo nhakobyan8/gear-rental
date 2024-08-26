@@ -11,6 +11,7 @@ export async function middleware(request) {
    const isPayment = pathname.startsWith('/payment');
    const isAdminRoute = pathname.startsWith('/admin');
    const isUserRoute = pathname.startsWith('/user');
+   const isApiRoute = pathname.startsWith('/api/admin');
 
    if ((isCheckout || isPayment) && !token) {
       url.pathname = '/auth/';
@@ -33,8 +34,8 @@ export async function middleware(request) {
       }
    }
 
-   if (isAdminRoute && token?.role !== 'admin') {
-      url.pathname = '/account';
+   if ((isAdminRoute || isApiRoute) && token?.role !== 'admin') {
+      url.pathname = '/';
       return NextResponse.redirect(url);
    }
 
@@ -47,5 +48,5 @@ export async function middleware(request) {
 }
 
 export const config = {
-   matcher: ['/checkout', '/payment', '/dashboard', '/admin/:path*', '/user/:path*'],
+   matcher: ['/checkout', '/payment', '/dashboard', '/admin/:path*', '/user/:path*', '/api/admin/:path*'],
 };

@@ -9,34 +9,35 @@ import CartModal from '@/components/CartModal';
 
 export default function Header() {
   const cartItems = useSelector((state) => state.cart.items);
-  const [isMounted, setIsMounted] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const totalItems = cartItems.reduce((total, item) => total + item.quantity, 0);
   const { data: session, status } = useSession();
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   useEffect(() => {
-    // Set mounted state to true to avoid SSR issues
-    setIsMounted(true);
-  }, []);
+    if (status !== "loading") {
+      setIsLoading(false);
+    }
+  }, [status]);
 
-  const toggleMenu = useCallback(() => {
+  const toggleMenu = () => {
     setIsMenuOpen((prev) => !prev);
     if (isCartOpen) setIsCartOpen(false);
-  }, [isCartOpen]);
+  };
 
-  const toggleCart = useCallback(() => {
+  const toggleCart = () => {
     setIsCartOpen((prev) => !prev);
     if (isMenuOpen) setIsMenuOpen(false);
-  }, [isMenuOpen]);
+  };
 
-  const handleSignOut = useCallback(() => {
+  const handleSignOut = () => {
     signOut();
-  }, []);
+  };
 
-  const renderAuthLinks = useCallback(() => {
-    if (status === 'loading') return <li>Loading...</li>;
+  if (isLoading) return;
 
+  const renderAuthLinks = () => {
     if (!session) {
       return (
         <Link onClick={handleCloseModal} href="/auth" >
@@ -51,24 +52,24 @@ export default function Header() {
       <ul className="flex justify-between items-center space-x-5">
         <li>
           <Link onClick={handleCloseModal} href={session.user.role === 'admin' ? "/admin" : "/account"} passHref>
-            <FaRegUserCircle size={25} />
+            <button className="block py-2 rounded-md text-white transition-colors hover:text-gray-400">
+              <FaRegUserCircle size={25} />
+            </button>
           </Link>
         </li>
         <li>
-          <button onClick={handleSignOut} className="block py-2 rounded-md">
+          <button onClick={handleSignOut} className="block py-2 rounded-md text-white transition-colors hover:text-gray-400">
             <FaSignOutAlt size={25} />
           </button>
         </li>
       </ul>
     );
-  }, [status, session]);
+  };
 
-  const handleCloseModal = useCallback(() => {
+  const handleCloseModal = () => {
     setIsMenuOpen(false);
     setIsCartOpen(false);
-  }, []);
-
-  if (!isMounted) return null;
+  };
 
   return (
     <header className="bg-background-light bg-opacity-95 sticky top-0 z-10 text-text shadow-lg">
@@ -83,7 +84,7 @@ export default function Header() {
         </div>
 
         <ul
-          className={`md:flex md:border-0 border border-slate-400/20 md:mx-3 w-64 md:w-auto fixed md:static top-0 left-0 right-0 p-4 md:p-0 bg-background-light md:bg-transparent z-30 h-full md:h-auto transition-transform duration-300 ease-in-out transform md:transform-none ${isMenuOpen ? "translate-x-0" : "-translate-x-full"} space-y-5 md:space-y-0 md:space-x-7 items-center`} >
+          className={`md:flex md:border-0 border border-slate-400/20 w-64 md:w-auto fixed md:static top-0 left-0 right-0 p-4 md:p-0 bg-background-light md:bg-transparent z-30 h-full md:h-auto transition-transform duration-300 ease-in-out transform md:transform-none ${isMenuOpen ? "translate-x-0" : "-translate-x-full"} space-y-5 md:space-y-0 md:space-x-7 items-center`} >
           <li>
             <Link onClick={handleCloseModal} href="/" passHref>
               Home
@@ -109,7 +110,7 @@ export default function Header() {
         <div className="flex items-center space-x-5">
           <button
             onClick={toggleCart}
-            className={`relative cursor-pointer ${totalItems && "p-3"}  inline-flex items-center text-center text-white`}
+            className={`relative cursor-pointer ${totalItems && "p-3"}  inline-flex items-center text-center text-white transition-colors hover:text-gray-400`}
           >
             <span><FaShoppingCart size={25} /></span>
             <div className={`absolute inline-flex ${totalItems === 0 && "hidden"} items-center justify-center w-5 h-5 text-xs font-bold text-white bg-primary border-white rounded-full -top-2 -end-2`}>
