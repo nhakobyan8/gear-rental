@@ -5,32 +5,32 @@ export default function ManageOrders() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // useEffect(() => {
-  //   async function fetchOrders() {
-  //     try {
-  //       const response = await fetch("/api/admin/orders");
-  //       if (!response.ok) {
-  //         throw new Error("Failed to fetch orders.");
-  //       }
-  //       const data = await response.json();
-  //       setOrders(data);
-  //     } catch (err) {
-  //       setError(err.message);
-  //     } finally {
-  //       setLoading(false);
-  //     }
-  //   }
+  useEffect(() => {
+    async function fetchOrders() {
+      try {
+        const response = await fetch("/api/admin/orders");
+        if (!response.ok) {
+          throw new Error("Failed to fetch orders.");
+        }
+        const data = await response.json();
+        setOrders(data);
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    }
 
-  //   fetchOrders();
-  // }, []);
+    fetchOrders();
+  }, []);
 
-  // if (loading) {
-  //   return <div>Loading orders...</div>;
-  // }
+  if (loading) {
+    return <div>Loading orders...</div>;
+  }
 
-  // if (error) {
-  //   return <div>Error: {error}</div>;
-  // }
+  if (error) {
+    return <div>Error: {error}</div>;
+  }
 
   return (
     <div>

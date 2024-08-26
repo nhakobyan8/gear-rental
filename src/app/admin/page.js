@@ -1,6 +1,8 @@
 "use client";
 import { useState } from 'react';
+import ManageUsers from '@/components/admin/ManageUsers';
 import ManageProducts from '@/components/admin/ManageProducts';
+import ManageOrders from '@/components/admin/ManageOrders';
 import { FaUsers, FaBox, FaShoppingCart } from 'react-icons/fa';
 
 export default function AdminDashboard() {
@@ -42,7 +44,7 @@ export default function AdminDashboard() {
               <h2 className="text-3xl font-bold mb-4 flex items-center">
                 <FaUsers className="mr-3" /> Manage Users
               </h2>
-              <h1>test</h1>
+              <ManageUsers />
             </div>
           )}
           {activeSection === 'products' && (
@@ -55,7 +57,7 @@ export default function AdminDashboard() {
               <h2 className="text-3xl font-bold mb-4 flex items-center">
                 <FaShoppingCart className="mr-3" /> Manage Orders
               </h2>
-              <h1>test</h1>
+              <ManageOrders />
             </div>
           )}
         </div>
