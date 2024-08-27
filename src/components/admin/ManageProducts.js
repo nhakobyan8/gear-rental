@@ -1,31 +1,27 @@
+"use client";
 import { useEffect, useState } from "react";
 import { FaEdit, FaTrash, FaPlus, FaBox } from "react-icons/fa";
 import Modal from "./Modal";
+import { deleteProduct, fetchProducts, saveProduct } from "@/lib/api";
 
 export default function ManageProducts() {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [modalType, setModalType] = useState(''); // 'add' | 'edit'
+  const [modalType, setModalType] = useState('');
   const [currentProduct, setCurrentProduct] = useState(null);
 
   useEffect(() => {
-    fetchProducts();
+    loadProducts();
   }, []);
 
-  async function fetchProducts() {
+  async function loadProducts() {
     try {
       setLoading(true);
-      const response = await fetch("/api/admin/products");
-      if (!response.ok) {
-        throw new Error("Failed to fetch products.");
-      }
-      const data = await response.json();
+      const data = await fetchProducts();
       setProducts(data);
-      console.log("Products fetched successfully", data); // Отладочный вывод
     } catch (err) {
-      console.error("Error fetching products:", err.message);
       setError(err.message);
     } finally {
       setLoading(false);
@@ -44,52 +40,24 @@ export default function ManageProducts() {
   }
 
   async function handleDelete(productId) {
-    console.log("Attempting to delete product with ID:", productId);
-    if (!confirm("Are you sure you want to delete this product?")) return;
-
-    try {
-      const response = await fetch("/api/admin/products", {
-        method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ id: productId }), // Передаем _id продукта для удаления
-      });
-
-      if (response.status !== 204) {
-        throw new Error("Failed to delete product.");
+    if (confirm("Are you sure you want to delete this product?")) {
+      try {
+        await deleteProduct(productId);
+        setProducts(products.filter(product => product._id !== productId));
+      } catch (err) {
+        setError(err.message);
       }
-
-      console.log("Product deleted successfully");
-      fetchProducts(); 
-    } catch (err) {
-      console.error("Error deleting product:", err.message);
-      setError(err.message);
     }
   }
 
   async function handleSave(product) {
     const method = modalType === 'edit' ? 'PUT' : 'POST';
-    const url = "/api/admin/products";
 
     try {
-      const response = await fetch(url, {
-        method,
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(product), 
-      });
-
-      if (!response.ok) {
-        throw new Error("Failed to save product.");
-      }
-
-      console.log("Product saved successfully");
-      await fetchProducts();
-      closeModal(); 
+      await saveProduct(product, method);
+      await loadProducts();
+      closeModal();
     } catch (err) {
-      console.error("Error saving product:", err.message);
       setError(err.message);
     }
   }
@@ -117,7 +85,7 @@ export default function ManageProducts() {
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {products.map((product) => (
-          <div key={product._id} className="bg-gray-800 text-white p-4 rounded-lg shadow-lg">
+          <div key={product._id} className="bg-gray-800 text-white p-4 rounded-lg flex flex-col justify-between shadow-lg">
             <img src={product.imageUrl} alt={product.name} className="w-full h-48 object-cover rounded-lg mb-4" />
             <h3 className="text-2xl font-bold mb-2">{product.name}</h3>
             <p className="text-gray-400 mb-2">{product.category} - {product.brand}</p>

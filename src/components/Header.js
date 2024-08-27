@@ -32,8 +32,11 @@ export default function Header() {
   };
 
   const handleSignOut = () => {
-    signOut();
+    if (confirm("Are you sure you want to sign out?")) {
+      signOut();
+    }
   };
+  
 
   if (isLoading) return;
 

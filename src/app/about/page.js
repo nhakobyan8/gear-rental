@@ -13,7 +13,7 @@ export default function About() {
         <meta property="og:image" content="/images/about-us.webp" />
         <meta property="og:type" content="website" />
       </Head>
-      <div className="bg-background min-h-screen text-text py-16">
+      <div className="bg-background-light min-h-screen text-text py-16">
         <div className="container mx-auto px-6 md:px-12 lg:px-24">
           <h1 className="text-5xl font-extrabold text-center text-white">About GearRental</h1>
           <p className="text-center text-lg text-text-muted mt-4 max-w-2xl mx-auto">

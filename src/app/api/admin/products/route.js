@@ -8,10 +8,13 @@ async function checkAdmin(req) {
    if (!token || token.role !== 'admin') {
       return NextResponse.json({ message: "Access Denied" }, { status: 403 });
    }
+   return null;
 }
 
 export async function GET(req) {
-   await checkAdmin(req);
+   const accessDeniedResponse = await checkAdmin(req);
+   if (accessDeniedResponse) return accessDeniedResponse;
+
    try {
       await connectMongo();
       const products = await Product.find({});
@@ -22,7 +25,9 @@ export async function GET(req) {
 }
 
 export async function POST(req) {
-   await checkAdmin(req);
+   const accessDeniedResponse = await checkAdmin(req);
+   if (accessDeniedResponse) return accessDeniedResponse;
+
    try {
       await connectMongo();
       const productData = await req.json();
@@ -35,30 +40,32 @@ export async function POST(req) {
 }
 
 export async function DELETE(req) {
-   await checkAdmin(req);
+   const accessDeniedResponse = await checkAdmin(req);
+   if (accessDeniedResponse) return accessDeniedResponse;
+
    try {
       await connectMongo();
-      const { _id } = await req.json();      
-      
+      const { _id } = await req.json();
       await Product.findByIdAndDelete(_id);
-      return NextResponse.json({ message: "Product deleted successfully." }, { status: 204 });
+      return NextResponse.json({ message: "Product deleted successfully." }, { status: 200 });
    } catch (error) {
-      return NextResponse.json({ message: "Failed to delete product." }, { status: 500 });
+      return NextResponse.json({ message: `Failed to delete product. ${error}` }, { status: 500 });
    }
 }
 
-
 export async function PUT(req) {
-   await checkAdmin(req);
+   const accessDeniedResponse = await checkAdmin(req);
+   if (accessDeniedResponse) return accessDeniedResponse;
+
    try {
       await connectMongo();
-      const { id, ...updatedData } = await req.json();
-
-      const updatedProduct = await Product.findByIdAndUpdate(id, updatedData, { new: true });
+      const { _id, ...updatedData } = await req.json();
+      const updatedProduct = await Product.findByIdAndUpdate(_id, updatedData, { new: true });
 
       if (!updatedProduct) {
          return NextResponse.json({ message: "Product not found" }, { status: 404 });
       }
+
       return NextResponse.json(updatedProduct, { status: 200 });
    } catch (error) {
       return NextResponse.json({ message: "Failed to update product." }, { status: 500 });

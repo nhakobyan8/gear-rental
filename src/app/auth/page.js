@@ -2,6 +2,7 @@
 import { useState, useCallback } from "react";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import { sendConfirmationCode, confirmCodeAndCreateAccount, handleLogin } from "@/lib/api";
 
 export default function AuthPage() {
   const [isRegister, setIsRegister] = useState(false);
@@ -30,7 +31,6 @@ export default function AuthPage() {
     setFormData((prevData) => ({ ...prevData, [id]: value }));
   }, []);
 
-
   const handleSubmit = useCallback(
     async (e) => {
       e.preventDefault();
@@ -38,91 +38,31 @@ export default function AuthPage() {
 
       try {
         if (isRegister) {
-          await handleRegistration();
+          if (!isCodeSent) {
+            await sendConfirmationCode(formData);
+            alert("Confirmation code sent to your email. Please check your email.");
+            setIsCodeSent(true);
+          } else {
+            await confirmCodeAndCreateAccount(formData);
+            alert("Registration successful! You can now log in.");
+            resetForm();
+            setIsRegister(false);
+          }
         } else {
-          await handleLogin();
+          await handleLogin(formData);
+          router.push("/");
         }
       } catch (error) {
-        console.error("Error during authentication:", error);
         alert("An error occurred: " + error.message);
       } finally {
         setLoading(false);
       }
     },
-    [isRegister, formData]
+    [isRegister, formData, isCodeSent]
   );
 
-  const handleRegistration = async () => {
-    if (!isCodeSent) {
-      await sendConfirmationCode();
-    } else {
-      await confirmCodeAndCreateAccount();
-    }
-  };
-
-  const sendConfirmationCode = async () => {
-    const res = await fetch("/api/auth/register", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        email: formData.email,
-        username: formData.username,
-        password: formData.password,
-      }),
-    });
-
-    const data = await res.json();
-    if (res.ok) {
-      alert("Confirmation code sent to your email. Please check your email.");
-      setIsCodeSent(true);
-    } else {
-      alert(data.message || "Failed to send confirmation code.");
-    }
-  };
-
-  const confirmCodeAndCreateAccount = async () => {
-    if (!formData.confirmationCode) {
-      return alert("Please enter the confirmation code.");
-    }
-
-    const res = await fetch("/api/auth/register", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        email: formData.email,
-        username: formData.username,
-        password: formData.password,
-        confirmationCode: formData.confirmationCode,
-      }),
-    });
-
-    const data = await res.json();
-
-    if (!res.ok) {
-      return alert(data.message || "Invalid confirmation code.");
-    }
-
-    alert("Registration successful! You can now log in.");
-    resetForm();
-    setIsRegister(false);
-  };
-
-  const handleLogin = async () => {
-    const res = await signIn("credentials", {
-      redirect: false,
-      email: formData.email,
-      password: formData.password,
-    });
-
-    if (res?.error) {
-      alert(res.error);
-    } else {
-      router.push("/");
-    }
-  };
-
   const handleGoogleSignIn = useCallback(() => {
-    signIn("google", { callbackUrl: "/"});
+    signIn("google", { callbackUrl: "/" });
   }, []);
 
   return (
