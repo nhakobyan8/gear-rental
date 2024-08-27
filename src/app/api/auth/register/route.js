@@ -4,12 +4,12 @@ import { NextResponse } from "next/server";
 import bcrypt from "bcrypt";
 import nodemailer from "nodemailer";
 
-let confirmationCodes = {}; // Временное хранилище для кодов подтверждения
+let confirmationCodes = {};
 
-// Функция отправки кода подтверждения на email
+
 const sendConfirmationCode = async (email) => {
   const confirmationCode = generateConfirmationCode();
-  confirmationCodes[email] = confirmationCode; // Сохраняем код во временном хранилище
+  confirmationCodes[email] = confirmationCode;
 
   const transporter = nodemailer.createTransport({
     service: "gmail",
@@ -29,12 +29,10 @@ const sendConfirmationCode = async (email) => {
   return NextResponse.json({ message: "Confirmation code sent to your email." }, { status: 200 });
 };
 
-// Генерация случайного кода подтверждения
 const generateConfirmationCode = () => {
   return Math.floor(100000 + Math.random() * 900000).toString();
 };
 
-// Подтверждение кода и создание пользователя
 export async function POST(req) {
   const { email, username, password, confirmationCode } = await req.json();
 
@@ -45,7 +43,6 @@ export async function POST(req) {
   }
 }
 
-// Функция проверки кода и создания пользователя
 const confirmCodeAndCreateUser = async (email, username, password, confirmationCode) => {
   const storedCode = confirmationCodes[email];
 
@@ -73,7 +70,7 @@ const confirmCodeAndCreateUser = async (email, username, password, confirmationC
       password: hashedPassword,
     });
 
-    delete confirmationCodes[email]; // Удаляем код из временного хранилища после успешной регистрации
+    delete confirmationCodes[email];
 
     return NextResponse.json({ message: "User registered successfully!" }, { status: 201 });
   } catch (error) {
