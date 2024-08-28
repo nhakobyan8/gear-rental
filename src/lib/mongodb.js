@@ -25,9 +25,6 @@ const connectMongo = async () => {
         password: hashedPassword,
         role: 'admin',
       });
-      console.log('Super admin created successfully!');
-    } else {
-      console.log('Super admin already exists.');
     }
 
   } catch (error) {

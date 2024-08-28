@@ -29,7 +29,7 @@ export async function middleware(request) {
    if (isPayment) {
       const hasCheckedOut = request.cookies.get('hasCheckedOut');
       if (!hasCheckedOut) {
-         url.pathname = '/checkout';
+         url.pathname = '/checkout/';
          return NextResponse.redirect(url);
       }
    }

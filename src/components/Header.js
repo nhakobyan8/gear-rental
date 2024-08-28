@@ -9,16 +9,14 @@ import CartModal from '@/components/CartModal';
 
 export default function Header() {
   const cartItems = useSelector((state) => state.cart.items);
-  const [isLoading, setIsLoading] = useState(true);
   const totalItems = cartItems.reduce((total, item) => total + item.quantity, 0);
   const { data: session, status } = useSession();
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
+
   useEffect(() => {
-    if (status !== "loading") {
-      setIsLoading(false);
-    }
+    if (status !== "loading") return
   }, [status]);
 
   const toggleMenu = () => {
@@ -38,7 +36,7 @@ export default function Header() {
   };
   
 
-  if (isLoading) return;
+  if (status === "loading") return;
 
   const renderAuthLinks = () => {
     if (!session) {
@@ -75,7 +73,7 @@ export default function Header() {
   };
 
   return (
-    <header className="bg-background-light bg-opacity-95 sticky top-0 z-10 text-text shadow-lg">
+    <header className="bg-background-light bg-opacity-95 sticky top-0 z-20 text-text shadow-lg">
       <nav className="container mx-auto p-4 flex justify-between items-center">
         <div className="flex items-center space-x-4">
           <Link href="/" passHref>

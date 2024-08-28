@@ -2,16 +2,36 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Cookies from 'js-cookie';
+import { useDispatch } from 'react-redux';
+import { createOrder } from '@/features/orderSlice';
 
 export default function Payment() {
    const [paymentMethod, setPaymentMethod] = useState('');
    const router = useRouter();
+   const dispatch = useDispatch();
+   const orderData = JSON.parse(Cookies.get('orderData'));
 
-   const handlePayment = () => {
+   const handlePayment = async () => {
       if (paymentMethod) {
          alert(`Payment processed with method: ${paymentMethod}`);
-         Cookies.remove('hasCheckedOut');
-         router.push('/thank-you'); 
+
+         const orderWithPayment = {
+            user: {
+               fullName: orderData.fullName,
+               phoneNumber: orderData.phoneNumber,
+               userId: orderData.userId,
+            },
+            ...orderData,
+            paymentMethod,
+         };
+
+         dispatch(createOrder(orderWithPayment)).then(() => {
+            Cookies.remove('orderData');
+            Cookies.remove('hasCheckedOut');
+            router.push('/thank-you');
+         }).catch((error) => {
+            alert('An error occurred while processing your payment. Please try again.');
+         });
       } else {
          alert('Please select a payment method');
       }

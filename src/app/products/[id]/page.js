@@ -4,7 +4,7 @@ import { usePathname, useRouter } from "next/navigation";
 import Image from "next/image";
 import { useDispatch } from "react-redux";
 import { addItemToCart } from "@/features/cartSlice";
-import Skeleton from 'react-loading-skeleton';
+import { FaSpinner } from "react-icons/fa";
 
 const SinglePage = () => {
   const pathname = usePathname();
@@ -58,18 +58,8 @@ const SinglePage = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-background-light text-gray-600 px-3 py-12">
-        <div className="max-w-4xl mx-auto bg-background p-8 rounded-lg shadow-lg">
-          <div className="flex flex-col items-center md:flex-row">
-            <div className="md:w-1/2 mb-6 md:mb-0">
-              <Skeleton height={500} />
-            </div>
-            <div className="md:w-1/2 md:pl-8">
-              <Skeleton height={40} width={300} />
-              <Skeleton count={5} style={{ marginTop: '1rem' }} />
-            </div>
-          </div>
-        </div>
+      <div className="flex justify-center items-center h-64">
+        <FaSpinner className="animate-spin text-4xl text-text-muted" />
       </div>
     );
   }

@@ -2,8 +2,7 @@
 import Filter from '@/components/Filter';
 import ProductCard from '@/components/ProductCard';
 import React, { useEffect, useMemo, useState } from 'react';
-import Skeleton from 'react-loading-skeleton';
-
+import { FaSpinner } from 'react-icons/fa';
 
 const Products = () => {
   const [products, setProducts] = useState([]);
@@ -37,22 +36,25 @@ const Products = () => {
 
     fetchProducts();
   }, []);
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center h-64">
+        <FaSpinner className="animate-spin text-4xl text-text-muted" />
+      </div>
+    )
+  }
+  if (error) {
+    return (
+      <div className="text-center text-red-500">{error}</div>
+    )
+  }
 
   return (
     <div className="min-h-screen bg-background-light text-text px-3 py-12">
       <h1 className="text-4xl font-bold mb-8 text-center">Our Products</h1>
       <Filter products={products} options={options} setFilteredProducts={setFilteredProducts} />
       <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-        {loading ? (
-          Array.from({ length: 6 }).map((_, index) => (
-            <div key={index} className="bg-background p-6 rounded-lg animate-fade-in-up shadow-lg">
-              <Skeleton height={200} />
-              <Skeleton count={2} style={{ marginTop: '1rem' }} />
-            </div>
-          ))
-        ) : error ? (
-          <div className="text-center text-red-500">{error}</div>
-        ) : filteredProducts.length > 0 ? (
+        {filteredProducts.length > 0 ? (
           filteredProducts.map((product, index) => (
             <ProductCard key={index} product={product} />
           ))

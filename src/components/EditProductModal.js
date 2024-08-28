@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 
-export default function Modal({ isOpen, onClose, onSave, product, modalType }) {
+export default function EditProductModal({ isOpen, onClose, onSave, product, modalType }) {
   const [formData, setFormData] = useState({
     name: '',
     description: '',
