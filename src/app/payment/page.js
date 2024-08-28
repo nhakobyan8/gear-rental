@@ -9,7 +9,19 @@ export default function Payment() {
    const [paymentMethod, setPaymentMethod] = useState('');
    const router = useRouter();
    const dispatch = useDispatch();
-   const orderData = Cookies.get('orderData');
+   const [orderData, setOrderData] = useState(null);
+
+   useEffect(() => {
+      const orderDataCookie = Cookies.get('orderData');
+      if (orderDataCookie) {
+        try {
+          setOrderData(JSON.parse(orderDataCookie));
+        } catch (error) {
+          console.error('Failed to parse orderData from cookies:', error);
+          setOrderData(null);
+        }
+      }
+    }, []);
 
    const handlePayment = async () => {
       if (paymentMethod) {
@@ -21,7 +33,7 @@ export default function Payment() {
                phoneNumber: orderData.phoneNumber,
                userId: orderData.userId,
             },
-            ...JSON.parse(orderData),
+            ...orderData,
             paymentMethod,
          };
 
