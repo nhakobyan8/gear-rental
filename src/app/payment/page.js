@@ -9,7 +9,7 @@ export default function Payment() {
    const [paymentMethod, setPaymentMethod] = useState('');
    const router = useRouter();
    const dispatch = useDispatch();
-   const orderData = JSON.parse(Cookies.get('orderData'));
+   const orderData = Cookies.get('orderData');
 
    const handlePayment = async () => {
       if (paymentMethod) {
@@ -21,7 +21,7 @@ export default function Payment() {
                phoneNumber: orderData.phoneNumber,
                userId: orderData.userId,
             },
-            ...orderData,
+            ...JSON.parse(orderData),
             paymentMethod,
          };
 
