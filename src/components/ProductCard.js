@@ -33,7 +33,7 @@ const ProductCard = ({ product }) => {
         </div>
       </Link>
       <div className="flex flex-col items-start justify-between">
-        <h3 className="text-xl font-semibold ">{product.name}</h3>
+        <h3 className="text-xl font-semibold text-nowrap">{product.name}</h3>
         <p className="text-text-muted mt-2">{product.description}</p>
         <div className="flex w-full justify-between items-center">
           <p className="text-primary font-bold text-lg mt-4">${product.price} per day</p>

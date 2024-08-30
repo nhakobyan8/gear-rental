@@ -55,7 +55,7 @@ export const authOptions = {
     },
     async jwt({ token, user }) {
       if (user) {
-        token.id = user.id; // Добавляем user.id в токен
+        token.id = user.id;
         token.role = user.role;
         token.name = user.name;
       }

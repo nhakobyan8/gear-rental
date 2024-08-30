@@ -51,11 +51,6 @@ const orderSchema = new mongoose.Schema({
   endDate: {
     type: Date,
   },
-  returnStatus: {
-    type: String,
-    enum: ['awaiting', 'returned', 'checked'],
-    default: 'awaiting',
-  },
 });
 
 export default mongoose.models.Order || mongoose.model('Order', orderSchema);

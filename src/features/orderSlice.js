@@ -1,36 +1,39 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 
-export const fetchUserOrders = createAsyncThunk('orders/fetchUserOrders', async () => {
-   const response = await fetch('/api/orders', {
-      method: 'GET',
-      headers: {
-         'Content-Type': 'application/json',
-      },
-   });
+export const fetchUserOrders = createAsyncThunk('orders/fetchUserOrders', async (_, { rejectWithValue }) => {
+   try {
+      const response = await fetch(`/api/user/orders`);
 
-   if (!response.ok) {
-      throw new Error('Failed to fetch orders');
+      if (!response.ok) {
+         throw new Error('Failed to fetch orders');
+      }
+
+      const data = await response.json();
+      return data.data || [];  // Возвращаем пустой массив, если данных нет
+   } catch (error) {
+      return rejectWithValue(error.message);
    }
-
-   const data = await response.json();
-   return data.data;
 });
 
-export const createOrder = createAsyncThunk('orders/createOrder', async (orderData) => {
-   const response = await fetch('/api/orders', {
-      method: 'POST',
-      body: JSON.stringify(orderData),
-      headers: {
-         'Content-Type': 'application/json',
-      },
-   });
+export const createOrder = createAsyncThunk('orders/createOrder', async (newOrderData, { rejectWithValue }) => {
+   try {
+      const response = await fetch('/api/user/orders', {
+         method: 'POST',
+         body: JSON.stringify(newOrderData),
+         headers: {
+            'Content-Type': 'application/json',
+         },
+      });
 
-   if (!response.ok) {
-      throw new Error('Failed to create order');
+      if (!response.ok) {
+         throw new Error('Failed to create order');
+      }
+
+      const data = await response.json();
+      return data.data;  // Предполагаем, что 'data' содержит созданный заказ
+   } catch (error) {
+      return rejectWithValue(error.message);
    }
-
-   const data = await response.json();
-   return data.data;
 });
 
 const orderSlice = createSlice({
@@ -40,7 +43,11 @@ const orderSlice = createSlice({
       loading: false,
       error: null,
    },
-   reducers: {},
+   reducers: {
+      resetError(state) {
+         state.error = null;
+      },
+   },
    extraReducers: (builder) => {
       builder
          .addCase(fetchUserOrders.pending, (state) => {
@@ -53,7 +60,7 @@ const orderSlice = createSlice({
          })
          .addCase(fetchUserOrders.rejected, (state, action) => {
             state.loading = false;
-            state.error = action.error.message;
+            state.error = action.payload || 'Failed to fetch orders';
          })
          .addCase(createOrder.pending, (state) => {
             state.loading = true;
@@ -65,9 +72,10 @@ const orderSlice = createSlice({
          })
          .addCase(createOrder.rejected, (state, action) => {
             state.loading = false;
-            state.error = action.error.message;
+            state.error = action.payload || 'Failed to create order';
          });
    },
 });
 
+export const { resetError } = orderSlice.actions;
 export default orderSlice.reducer;

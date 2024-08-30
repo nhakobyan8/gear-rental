@@ -65,9 +65,9 @@ export default function ManageOrdersPage() {
          </div>
 
 
-         <div className="flex flex-wrap justify-between gap-6">
+         <div className="grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8">
             {filteredOrders.map((order) => (
-               <div key={order._id} className="bg-background-dark border min-w-[400px] border-slate-400/20 rounded-lg shadow-md p-6">
+               <div key={order._id} className="bg-background-dark border border-slate-400/20 rounded-lg shadow-md p-6">
                   <div className="flex justify-between border-b border-slate-400/20 items-center mb-4">
                      <div className="text-text-dark">
                         <h3 className="text-lg font-semibold">{order.fullName}</h3>
@@ -80,14 +80,15 @@ export default function ManageOrdersPage() {
 
                   <div className="mb-4">
                      <h4 className="text-md font-semibold text-text-muted mb-2">Products:</h4>
-                     <ul className="text-text-dark space-y-2">
+                     <ul className="text-text-dark max-h-56 overflow-y-auto space-y-2">
                         {order.products.map((item, index) => (
                            <li key={index} className="flex items-center justify-between">
                               <div className="flex items-center space-x-4">
-                              <Image src={item.product.imageUrl} alt={item.name} width={80} height={80} className="rounded-lg object-cover" />
+                                 <div className="h-24 w-24 flex justify-center items-center overflow-hidden rounded-md border border-slate-400/20">
+                                    <Image src={item.product.imageUrl} alt={item.name} width={80} height={80} className="rounded-lg object-cover" />
+                                 </div>
                                  <span>{item.product.name}</span>
                               </div>
-
                               <span>x{item.quantity}</span>
                            </li>
                         ))}

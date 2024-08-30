@@ -42,7 +42,7 @@ export default function AdminLayout({ children }) {
         </ul>
       </aside>
 
-      <main className="flex-1 p-8">
+      <main className="flex-1 px-3 py-5">
         {children}
       </main>
     </div>

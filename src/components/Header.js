@@ -1,11 +1,13 @@
 "use client";
 import Image from 'next/image';
 import Link from 'next/link';
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { useSession, signOut } from 'next-auth/react';
 import { FaRegUserCircle, FaSignOutAlt, FaShoppingCart } from "react-icons/fa";
-import CartModal from '@/components/CartModal';
+import LoginModal from './modals/LoginModal';
+import RegisterModal from './modals/RegisterModal';
+import CartModal from './modals/CartModal';
 
 export default function Header() {
   const cartItems = useSelector((state) => state.cart.items);
@@ -13,6 +15,11 @@ export default function Header() {
   const { data: session, status } = useSession();
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isLoginOpen, setIsLoginOpen] = useState(false);
+  const [isRegisterOpen, setIsRegisterOpen] = useState(false);
+
+  const openLoginModal = () => setIsLoginOpen(true);
+  const openRegisterModal = () => setIsRegisterOpen(true);
 
 
   useEffect(() => {
@@ -34,25 +41,24 @@ export default function Header() {
       signOut();
     }
   };
-  
+
 
   if (status === "loading") return;
 
   const renderAuthLinks = () => {
     if (!session) {
       return (
-        <Link onClick={handleCloseModal} href="/auth" >
-          <ul>
-            <li>Auth</li>
-          </ul>
-        </Link>
+        <div className="space-x-4 text-white">
+          <button onClick={openLoginModal}>Login</button>
+          <button onClick={openRegisterModal}>Register</button>
+        </div>
       );
     }
 
     return (
       <ul className="flex justify-between items-center space-x-5">
         <li>
-          <Link onClick={handleCloseModal} href={session.user.role === 'admin' ? "/admin" : "/account"} passHref>
+          <Link onClick={handleCloseModal} href={session.user.role === 'admin' ? "/admin" : "/user"} passHref>
             <button className="block py-2 rounded-md text-white transition-colors hover:text-gray-400">
               <FaRegUserCircle size={25} />
             </button>
@@ -144,9 +150,9 @@ export default function Header() {
         </div>
       </nav>
       <CartModal isCartOpen={isCartOpen} toggleCart={toggleCart} />
-      {(isMenuOpen || isCartOpen) && (
-        <div className="fixed inset-0 cursor-pointer z-10" onClick={handleCloseModal}></div>
-      )}
+      <LoginModal isOpen={isLoginOpen} onClose={() => setIsLoginOpen(false)} />
+      <RegisterModal isOpen={isRegisterOpen} onClose={() => setIsRegisterOpen(false)} />
+      {isMenuOpen && (<div className="fixed inset-0 cursor-pointer z-10" onClick={handleCloseModal}></div>)}
     </header>
   );
 }

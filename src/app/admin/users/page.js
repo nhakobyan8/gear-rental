@@ -1,7 +1,7 @@
 "use client";
+import EditUserModal from "@/components/modals/EditUserModal";
 import { useEffect, useState } from "react";
 import { FaSpinner, FaEdit, FaTrash } from "react-icons/fa";
-import EditUserModal from "@/components/EditUserModal";
 
 export default function ManageUsersPage() {
   const [users, setUsers] = useState([]);

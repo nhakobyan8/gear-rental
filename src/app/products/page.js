@@ -53,7 +53,7 @@ const Products = () => {
     <div className="min-h-screen bg-background-light text-text px-3 py-12">
       <h1 className="text-4xl font-bold mb-8 text-center">Our Products</h1>
       <Filter products={products} options={options} setFilteredProducts={setFilteredProducts} />
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+      <div className="grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8 gap-6">
         {filteredProducts.length > 0 ? (
           filteredProducts.map((product, index) => (
             <ProductCard key={index} product={product} />

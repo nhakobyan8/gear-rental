@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { FaEdit, FaTrash, FaPlus, FaBox, FaSpinner } from "react-icons/fa";
 import { deleteProduct, fetchProducts, saveProduct } from "@/lib/api";
 import Image from "next/image";
-import EditProductModal from "@/components/EditProductModal";
+import EditProductModal from "@/components/modals/EditProductModal";
 
 
 export default function ManageProductsPage() {
@@ -89,7 +89,7 @@ export default function ManageProductsPage() {
                <FaPlus className="inline mr-2" /> Add Product
             </button>
          </div>
-         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+         <div className="grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8 gap-6">
             {products.map((product) => (
                <div key={product._id} className="bg-gray-800 text-white p-4 rounded-lg flex flex-col justify-between shadow-lg">
                   <div className="relative h-60 w-full mb-4">
@@ -102,8 +102,8 @@ export default function ManageProductsPage() {
                         priority
                      />
                   </div>
-                  <h3 className="text-2xl font-bold mb-2">{product.name}</h3>
-                  <p className="text-gray-400 mb-2">{product.category} - {product.brand}</p>
+                  <h3 className="text-2xl font-bold text-nowrap mb-2">{product.name}</h3>
+                  <p className="text-gray-400 mb-2 text-nowrap" >{product.category} - {product.brand}</p>
                   <p className="text-xl font-semibold mb-4">${product.price.toFixed(2)}</p>
                   <p className="text-gray-300 mb-4">{product.description}</p>
                   <div className="flex justify-between">
