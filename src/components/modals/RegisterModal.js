@@ -11,40 +11,51 @@ export default function RegisterModal({ isOpen, onClose }) {
       username: "",
       confirmationCode: "",
    });
+
    const [isCodeSent, setIsCodeSent] = useState(false);
    const dispatch = useDispatch();
    const { loading, error } = useSelector((state) => state.users);
 
+
    const handleInputChange = useCallback((e) => {
       const { id, value } = e.target;
       setFormData((prevData) => ({ ...prevData, [id]: value }));
-   }, []);
+   }, [setFormData]);
 
    const handleSubmit = useCallback(
       async (e) => {
          e.preventDefault();
 
          if (!isCodeSent) {
-            dispatch(registerUser({ ...formData, isRegister: true })).then((action) => {
+            try {
+               const action = await dispatch(registerUser({ ...formData, isRegister: true }));
                if (!action.error) {
                   alert("Confirmation code sent to your email. Please check your email.");
                   setIsCodeSent(true);
                } else {
                   alert(action.payload);
                }
-            });
+            } catch (error) {
+               console.error("Registration error:", error);
+            }
          } else {
-            dispatch(registerUser({ ...formData, isRegister: true, isCodeSent: true })).then((action) => {
+            try {
+               const action = await dispatch(registerUser({ ...formData, isRegister: true, isCodeSent: true }));
                if (!action.error) {
                   alert("Registration successful! You can now log in.");
                   onClose();
                   setIsCodeSent(false);
                   setFormData({ email: "", password: "", username: "", confirmationCode: "" });
+               } else {
+                  alert(action.payload);
                }
-            });
+            } catch (error) {
+               console.error("Error during code confirmation:", error);
+            }
          }
       },
-      [dispatch, formData, isCodeSent]);
+      [dispatch, formData, isCodeSent, onClose]
+   );
 
    return (
       <Modal isOpen={isOpen} onClose={onClose}>
@@ -65,6 +76,7 @@ export default function RegisterModal({ isOpen, onClose }) {
             <div className="mb-4">
                <label htmlFor="email" className="block text-text-muted mb-2">Email</label>
                <input
+                  id="email"
                   type="email"
                   value={formData.email}
                   onChange={handleInputChange}
@@ -75,6 +87,7 @@ export default function RegisterModal({ isOpen, onClose }) {
             <div className="mb-6">
                <label htmlFor="password" className="block text-text-muted mb-2">Password</label>
                <input
+                  id="password"
                   type="password"
                   value={formData.password}
                   onChange={handleInputChange}
@@ -105,6 +118,5 @@ export default function RegisterModal({ isOpen, onClose }) {
             {error && <p className="text-red-500 text-center mt-4">{error}</p>}
          </form>
       </Modal>
-
    );
 }

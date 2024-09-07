@@ -36,11 +36,21 @@ const generateConfirmationCode = () => {
 export async function POST(req) {
   const { email, username, password, confirmationCode } = await req.json();
 
-  if (confirmationCode) {
-    return await confirmCodeAndCreateUser(email, username, password, confirmationCode);
-  } else {
-    return await sendConfirmationCode(email);
+  try {
+    await connectMongo();
+    const existingUser = await User.findOne({ email });
+    if (existingUser) {
+      return NextResponse.json({ message: "Email already in use." }, { status: 400 });
+    }
+    if (confirmationCode) {
+      return await confirmCodeAndCreateUser(email, username, password, confirmationCode);
+    } else {
+      return await sendConfirmationCode(email);
+    }
+  } catch (error) {
+    return NextResponse.json({ message: "Something went wrong." }, { status: 400 })
   }
+
 }
 
 const confirmCodeAndCreateUser = async (email, username, password, confirmationCode) => {
@@ -57,11 +67,6 @@ const confirmCodeAndCreateUser = async (email, username, password, confirmationC
   try {
     await connectMongo();
 
-    const existingUser = await User.findOne({ email });
-    if (existingUser) {
-      return NextResponse.json({ message: "Email already in use." }, { status: 400 });
-    }
-
     const hashedPassword = await bcrypt.hash(password, 10);
 
     await User.create({
@@ -74,7 +79,6 @@ const confirmCodeAndCreateUser = async (email, username, password, confirmationC
 
     return NextResponse.json({ message: "User registered successfully!" }, { status: 201 });
   } catch (error) {
-    console.error("Error creating user:", error);
     return NextResponse.json({ message: "Failed to create user." }, { status: 500 });
   }
 };

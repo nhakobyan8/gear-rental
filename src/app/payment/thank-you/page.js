@@ -1,7 +1,27 @@
+"use client";
+import Cookies from "js-cookie";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 import { FaCheckCircle } from "react-icons/fa";
 
 export default function ThankYouPage() {
+  const router = useRouter();
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+
+    const hasVisitedThankYou = Cookies.get('hasVisitedThankYou');
+
+    if (!hasVisitedThankYou) {
+      router.push('/');
+    } else {
+      Cookies.remove('hasVisitedThankYou');
+      setLoading(false);
+    }
+  }, [router]);
+
+  if(loading) return
 
   return (
     <div className="container mx-auto p-8 text-center">

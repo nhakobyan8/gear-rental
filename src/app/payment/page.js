@@ -28,6 +28,7 @@ export default function Payment() {
          dispatch(createOrder(orderWithPayment)).then(() => {
             Cookies.remove('orderData');
             Cookies.remove('hasCheckedOut');
+            Cookies.set('hasVisitedThankYou', 'true', { expires: 1 });
             router.push('payment/thank-you');
          }).catch((error) => {
             alert('An error occurred while processing your payment. Please try again.');

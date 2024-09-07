@@ -19,11 +19,6 @@ const UserProfile = () => {
     dispatch(fetchUserProfile());
   }, [dispatch]);
 
-  useEffect(() => {
-    if (profile && profile.username) {
-      setUsername(profile.username);
-    }
-  }, [profile]);
 
   const handleUsernameSubmit = async (e) => {
     e.preventDefault();
@@ -89,14 +84,14 @@ const UserProfile = () => {
                   </form>
                 ) : (
                   <div className="flex items-center">
-                    <p className="text-lg text-text mr-2"><strong>Name:</strong> {profile.username}</p>
+                    <p className="text-lg text-text mr-2"><strong>Name:</strong> {profile?.username}</p>
                     <FaPencilAlt
                       onClick={() => setIsEditingUsername(true)}
                       className="text-primary cursor-pointer hover:text-primary-dark transition duration-300"
                     />
                   </div>
                 )}
-                <p className="text-lg text-text mr-2"><strong>Email:</strong> {profile.email}</p>
+                <p className="text-lg text-text mr-2"><strong>Email:</strong> {profile?.email}</p>
                 {usernameError && <p className="text-red-500 text-sm">{usernameError}</p>}
                 {usernameSuccess && <p className="text-green-500 text-sm">{usernameSuccess}</p>}
               </div>

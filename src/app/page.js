@@ -1,5 +1,6 @@
 import { memo } from 'react';
 import Link from 'next/link';
+import FeaturedProducts from '@/components/FeaturedProducts';
 
 const features = [
   {
@@ -16,11 +17,6 @@ const features = [
   },
 ];
 
-const featuredProducts = [
-  { name: 'Microphone A', description: "A top-tier microphone that captures every detail of your sound.", id: "66c8abbd7f8f20b219684c20" },
-  { name: 'Mixer B', description: "An advanced mixer that gives you full control over your audio projects.", id: "66c8abbd7f8f20b219684c23" },
-  { name: 'Headphones C', description: "High-fidelity headphones that let you hear every nuance.", id: "66c8abbd7f8f20b219684c26" },
-];
 
 const testimonials = [
   {
@@ -78,23 +74,7 @@ const Home = () => {
             ))}
           </div>
         </section>
-
-        <section className="mt-20 max-w-4xl mx-auto">
-          <h2 className="text-3xl md:text-4xl font-bold text-text">Featured Products</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-10 text-text-muted">
-            {featuredProducts.map((product) => (
-              <Link
-                href={`/products/${product.id}`}
-                key={product.id}
-                className="space-y-4 bg-background-light p-6 rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300 ease-in-out"
-                aria-label={`View details for ${product.name}`}
-              >
-                <h3 className="text-xl md:text-2xl font-semibold">{product.name}</h3>
-                <p>{product.description}</p>
-              </Link>
-            ))}
-          </div>
-        </section>
+        <FeaturedProducts />
 
         <section className="mt-20 max-w-4xl mx-auto">
           <h2 className="text-3xl md:text-4xl font-bold text-text">What Our Clients Say</h2>

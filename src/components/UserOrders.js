@@ -3,6 +3,7 @@ import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchUserOrders } from '@/features/orderSlice';
 import Image from 'next/image';
+import { FaSpinner } from 'react-icons/fa';
 
 const UserOrders = () => {
    const dispatch = useDispatch();
@@ -12,7 +13,13 @@ const UserOrders = () => {
       dispatch(fetchUserOrders());
    }, []);
 
-   if (loading) return;
+   if (loading) {
+      return (
+        <div className="flex justify-center items-center h-64">
+          <FaSpinner className="animate-spin text-4xl text-text-muted" />
+        </div>
+      );
+    }
 
 
    if (error) {

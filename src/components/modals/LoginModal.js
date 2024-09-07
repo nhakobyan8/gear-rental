@@ -23,7 +23,10 @@ export default function LoginModal({ isOpen, onClose }) {
 
          const action = await dispatch(loginUser({ email: formData.email, password: formData.password })).unwrap();
 
-         if (!action.error) router.push("/");
+         if (!action.error) {
+            router.push("/");
+            onClose();
+         };
 
       }, [dispatch, formData, router]);
 

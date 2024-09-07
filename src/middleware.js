@@ -14,7 +14,7 @@ export async function middleware(request) {
    const isApiRoute = pathname.startsWith('/api/admin');
 
    if ((isCheckout || isPayment) && !token) {
-      url.pathname = '/auth/';
+      url.pathname = '/';
       return NextResponse.redirect(url);
    }
 
