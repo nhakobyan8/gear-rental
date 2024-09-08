@@ -106,6 +106,11 @@ export default function ManageProductsPage() {
                   <p className="text-gray-400 mb-2 text-nowrap" >{product.category} - {product.brand}</p>
                   <p className="text-xl font-semibold mb-4">${product.price.toFixed(2)}</p>
                   <p className="text-gray-300 mb-4">{product.description}</p>
+                  <div className="flex items-center space-x-3 mb-4">
+                     <p className="text-sm">Total Quantity: {product.totalQuantity}</p> <span>/</span>
+                     <p className="text-sm">Available Quantity: {product.availableQuantity}</p>
+                  </div>
+
                   <div className="flex justify-between">
                      <button
                         className="text-blue-400 hover:text-blue-500"

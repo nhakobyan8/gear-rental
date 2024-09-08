@@ -1,4 +1,5 @@
 import Order from '@/models/Order';
+import Product from '@/models/Product';
 import { NextResponse } from 'next/server';
 import connectMongo from '@/lib/mongodb';
 import { getToken } from 'next-auth/jwt';
@@ -27,7 +28,7 @@ export async function GET(req) {
 
 export async function POST(req) {
   await connectMongo();
-  
+
   const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
 
   if (!token || token.role !== 'user') {
@@ -60,9 +61,21 @@ export async function POST(req) {
     });
 
     const savedOrder = await newOrder.save();
+
+
+    const updatePromises = products.map(async (item) => {
+      const product = await Product.findById(item.product._id);
+      if (product) {
+        product.availableQuantity -= item.quantity;
+        await product.save();
+      }
+    });
+
+    await Promise.all(updatePromises);
+
     return NextResponse.json({ success: true, data: savedOrder }, { status: 201 });
   } catch (error) {
-    console.error('Error creating order:', error);
     return NextResponse.json({ success: false, message: error.message }, { status: 400 });
   }
 }
+

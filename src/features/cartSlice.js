@@ -31,13 +31,19 @@ const cartSlice = createSlice({
           price: newItem.price,
           quantity: 1,
           totalPrice: newItem.price,
+          availableQuantity: newItem.availableQuantity,
         });
+        state.totalAmount += newItem.price;
       } else {
-        existingItem.quantity++;
-        existingItem.totalPrice += newItem.price;
+        if (existingItem.quantity < existingItem.availableQuantity) {
+          existingItem.quantity++;
+          existingItem.totalPrice += newItem.price;
+          state.totalAmount += newItem.price;
+        } else {
+          alert("No more items available in stock.");
+        }
       }
 
-      state.totalAmount += newItem.price;
       saveCartToCookies(state.items);
     },
     removeItemFromCart(state, action) {
@@ -55,9 +61,13 @@ const cartSlice = createSlice({
       const existingItem = state.items.find(item => item._id === id);
 
       if (existingItem) {
-        existingItem.quantity++;
-        existingItem.totalPrice += existingItem.price;
-        state.totalAmount += existingItem.price;
+        if (existingItem.quantity < existingItem.availableQuantity) {
+          existingItem.quantity++;
+          existingItem.totalPrice += existingItem.price;
+          state.totalAmount += existingItem.price;
+        } else {
+          alert("No more items available in stock.");
+        }
         saveCartToCookies(state.items);
       }
     },

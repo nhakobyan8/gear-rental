@@ -9,13 +9,18 @@ const ProductCard = ({ product }) => {
   const dispatch = useDispatch();
 
   const addToCartHandler = () => {
+    if (product.availableQuantity === 0) {
+      alert('Product is out of stock');
+      return;
+    }
+
     dispatch(addItemToCart({
       _id: product._id,
       name: product.name,
       price: product.price,
       imageUrl: product.imageUrl,
+      availableQuantity: product.availableQuantity,
     }));
-    alert('Product added to cart successfully!');
   };
 
   return (
@@ -35,11 +40,22 @@ const ProductCard = ({ product }) => {
       <div className="flex flex-col items-start justify-between">
         <h3 className="text-xl font-semibold text-nowrap">{product.name}</h3>
         <p className="text-text-muted mt-2">{product.description}</p>
-        <div className="flex w-full justify-between items-center">
-          <p className="text-primary font-bold text-lg mt-4">${product.price} per day</p>
+
+        <p className={`mt-2 ${product.availableQuantity === 0 ? 'text-red-500' : 'text-green-500'}`}>
+          {product.availableQuantity > 0 
+            ? `Available: ${product.availableQuantity}` 
+            : 'Out of Stock'}
+        </p>
+
+        <div className="flex w-full justify-between items-center mt-4">
+          <p className="text-primary font-bold text-lg">${product.price} per day</p>
+
           <button
             onClick={addToCartHandler}
-            className="mt-4 px-4 py-2 bg-primary text-white rounded-md hover:bg-primary-dark transition-transform duration-300 ease-in-out transform hover:scale-105 shadow-lg focus:outline-none focus:ring-2 focus:ring-primary-light"
+            className={`px-4 py-2 bg-primary text-white rounded-md  transition-transform duration-300 ease-in-out transform  shadow-lg focus:outline-none focus:ring-2 focus:ring-primary-light ${
+              product.availableQuantity === 0 ? 'opacity-50 cursor-not-allowed' : 'hover:scale-105 hover:bg-primary-dark'
+            }`}
+            disabled={product.availableQuantity === 0}
           >
             Add to Cart
           </button>

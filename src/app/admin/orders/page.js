@@ -110,7 +110,7 @@ export default function ManageOrdersPage() {
             </div>
          </div>
 
-         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-6">
+         <div className="grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8 gap-6">
             {filteredOrders.map((order) => (
                <div key={order._id} className="bg-background-dark border border-slate-400/20 rounded-lg shadow-md p-4 flex flex-col justify-between">
                   <div className="mb-4">
@@ -146,7 +146,7 @@ export default function ManageOrdersPage() {
                         <p>Total Amount: <span className="font-bold">${order.totalAmount.toFixed(2)}</span></p>
                         <p>
                            Status:{" "}
-                           <span className={`font-bold ${order.status === "completed" ? "text-green-500" : order.status === "rented" ? "text-yellow-500" : "text-red-500"}`}>
+                           <span className={`font-bold ${order.status === "completed" ? "text-green-500" : order.status === "rented" ? "text-yellow-500" : "text-gray-500"}`}>
                               {order.status}
                            </span>
                         </p>
@@ -161,8 +161,6 @@ export default function ManageOrdersPage() {
                         >
                            <option value="paid">Paid</option>
                            <option value="rented">Rented</option>
-                           <option value="returned">Returned</option>
-                           <option value="checked">Checked</option>
                            <option value="completed">Completed</option>
                         </select>
                         <button onClick={() => handleDeleteOrder(order._id)} className="text-red-500 hover:underline">Delete</button>

@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import Modal from './Modal';
 
 export default function EditProductModal({ isOpen, onClose, onSave, product, modalType }) {
   const [formData, setFormData] = useState({
@@ -15,6 +16,8 @@ export default function EditProductModal({ isOpen, onClose, onSave, product, mod
       brand: '',
       model: '',
     },
+    totalQuantity: '',
+    availableQuantity: '',
   });
 
   useEffect(() => {
@@ -33,6 +36,8 @@ export default function EditProductModal({ isOpen, onClose, onSave, product, mod
           brand: '',
           model: '',
         },
+        totalQuantity: product.totalQuantity || '',
+        availableQuantity: product.availableQuantity || '',
       });
     } else {
       resetForm();
@@ -54,6 +59,8 @@ export default function EditProductModal({ isOpen, onClose, onSave, product, mod
         brand: '',
         model: '',
       },
+      totalQuantity: '',
+      availableQuantity: '',
     });
   };
 
@@ -84,19 +91,21 @@ export default function EditProductModal({ isOpen, onClose, onSave, product, mod
       ...formData,
       price: parseFloat(formData.price),
       features: formData.features.split(',').map((feature) => feature.trim()),
+      totalQuantity: parseInt(formData.totalQuantity),
+      availableQuantity: parseInt(formData.availableQuantity),
     };
 
     onSave(updatedProduct);
   };
 
   return (
-    <div onClick={onClose} className={`fixed cursor-pointer inset-0 bg-black z-30 bg-opacity-75 flex items-center justify-center ${isOpen ? '' : 'hidden'}`}>
-      <div onClick={(e) => e.stopPropagation()} className="bg-background-light relative p-8 rounded-lg w-full max-w-2xl mx-4 md:mx-auto shadow-lg overflow-y-auto lg:max-h-full max-h-96">
+    <Modal onClose={onClose} isOpen={isOpen}>
+      <div onClick={(e) => e.stopPropagation()} className="bg-background-light relative rounded-lg shadow-lg overflow-y-auto max-h-96">
         <h2 className="text-3xl font-bold mb-6 text-text-dark">
           {modalType === 'edit' ? 'Edit Product' : 'Add Product'}
         </h2>
         <form onSubmit={handleSubmit}>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
             <div className="col-span-1">
               <label className="block text-text-muted mb-2">Product Name</label>
               <input
@@ -116,6 +125,28 @@ export default function EditProductModal({ isOpen, onClose, onSave, product, mod
                 step="0.01"
                 className="w-full p-3 bg-background-dark text-white border border-gray-600 rounded"
                 value={formData.price}
+                onChange={handleInputChange}
+                required
+              />
+            </div>
+            <div className="col-span-1">
+              <label className="block text-text-muted mb-2">Total Quantity</label>
+              <input
+                type="number"
+                name="totalQuantity"
+                className="w-full p-3 bg-background-dark text-white border border-gray-600 rounded"
+                value={formData.totalQuantity}
+                onChange={handleInputChange}
+                required
+              />
+            </div>
+            <div className="col-span-1">
+              <label className="block text-text-muted mb-2">Available Quantity</label>
+              <input
+                type="number"
+                name="availableQuantity"
+                className="w-full p-3 bg-background-dark text-white border border-gray-600 rounded"
+                value={formData.availableQuantity}
                 onChange={handleInputChange}
                 required
               />
@@ -238,6 +269,6 @@ export default function EditProductModal({ isOpen, onClose, onSave, product, mod
           </div>
         </form>
       </div>
-    </div>
+    </Modal>
   );
 }

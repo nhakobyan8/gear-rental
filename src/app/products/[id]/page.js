@@ -37,16 +37,14 @@ const SinglePage = () => {
   }, [productId]);
 
   const addToCartHandler = useCallback(() => {
-    if (!product) return;
-
     try {
       dispatch(addItemToCart({
         _id: product._id,
         name: product.name,
         price: product.price,
         imageUrl: product.imageUrl,
+        availableQuantity: product.availableQuantity,
       }));
-      alert('Product added to cart successfully!');
     } catch (error) {
       setError('Failed to add item to cart');
     }
@@ -102,6 +100,11 @@ const SinglePage = () => {
             <p className="text-lg text-text-muted mb-4">{product.description}</p>
             <p className="text-primary font-bold text-2xl mb-6">${product.price} per day</p>
 
+            <h2 className="text-xl font-semibold mb-2">Available Quantity: {product.availableQuantity}</h2>
+            {product.availableQuantity === 0 && (
+              <p className="text-red-500 mb-6">This product is currently out of stock for rental.</p>
+            )}
+
             <h2 className="text-2xl font-semibold mb-4">Features</h2>
             <ul className="list-disc list-inside mb-8">
               {product.features?.map((feature, index) => (
@@ -129,10 +132,19 @@ const SinglePage = () => {
             </div>
 
             <div className="mt-8 flex space-x-4">
-              <button onClick={addToCartHandler} className="px-6 py-3 bg-primary text-white rounded-md hover:bg-primary-dark transition-transform duration-300 ease-in-out transform hover:scale-105 shadow-lg focus:outline-none focus:ring-2 focus:ring-primary-light">
+              <button
+                onClick={addToCartHandler}
+                className={`px-6 py-3 bg-primary text-white rounded-md hover:bg-primary-dark transition-transform duration-300 ease-in-out transform hover:scale-105 shadow-lg focus:outline-none focus:ring-2 focus:ring-primary-light ${
+                  product.availableQuantity === 0 ? 'opacity-50 cursor-not-allowed' : ''
+                }`}
+                disabled={product.availableQuantity === 0}
+              >
                 Add to Cart
               </button>
-              <button onClick={goBack} className="px-6 py-3 bg-secondary text-white rounded-md hover:bg-secondary-dark transition-transform duration-300 ease-in-out transform hover:scale-105 shadow-lg focus:outline-none focus:ring-2 focus:ring-secondary-light">
+              <button
+                onClick={goBack}
+                className="px-6 py-3 bg-secondary text-white rounded-md hover:bg-secondary-dark transition-transform duration-300 ease-in-out transform hover:scale-105 shadow-lg focus:outline-none focus:ring-2 focus:ring-secondary-light"
+              >
                 Go Back
               </button>
             </div>

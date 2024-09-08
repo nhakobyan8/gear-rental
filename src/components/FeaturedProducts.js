@@ -26,13 +26,7 @@ export default function FeaturedProducts() {
       fetchProducts();
    }, []);
 
-   if (loading) {
-      return <div>Loading...</div>;
-   }
-
-   if (error) {
-      return <div className="text-red-500">{error}</div>;
-   }
+   if (loading || error) return 
 
    return (
       <section className="mt-20 max-w-4xl mx-auto">
@@ -42,7 +36,7 @@ export default function FeaturedProducts() {
                <Link
                   href={`/products/${product._id}`}
                   key={product.id}
-                  className="space-y-4 bg-background-light p-6 rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300 ease-in-out"
+                  className="space-y-4 bg-background-light p-6 min-h-40 rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300 ease-in-out"
                   aria-label={`View details for ${product.name}`}
                >
                   <h3 className="text-xl md:text-2xl font-semibold">{product.name}</h3>

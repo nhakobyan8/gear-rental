@@ -4,16 +4,25 @@ import { useRouter } from 'next/navigation';
 import Cookies from 'js-cookie';
 import { useDispatch } from 'react-redux';
 import { createOrder } from '@/features/orderSlice';
+import { clearCart } from '@/features/cartSlice';
 
 export default function Payment() {
    const [paymentMethod, setPaymentMethod] = useState('');
+   const [loading, setLoading] = useState(false);
    const router = useRouter();
    const dispatch = useDispatch();
-   const orderData = Cookies.get('orderData');
+   const orderData = Cookies.get('orderData') ? JSON.parse(Cookies.get('orderData')) : null; // Добавляем проверку
 
    const handlePayment = async () => {
+      if (!orderData) {
+         alert('Order data is missing. Please return to checkout.');
+         router.push('/checkout');
+         return;
+      }
+
       if (paymentMethod) {
-         alert(`Payment processed with method: ${paymentMethod}`);
+         setLoading(true);
+         alert(`Processing payment with method: ${paymentMethod}`);
 
          const orderWithPayment = {
             user: {
@@ -21,17 +30,20 @@ export default function Payment() {
                phoneNumber: orderData.phoneNumber,
                userId: orderData.userId,
             },
-            ...JSON.parse(orderData),
+            ...orderData,
             paymentMethod,
          };
 
          dispatch(createOrder(orderWithPayment)).then(() => {
+            dispatch(clearCart());
             Cookies.remove('orderData');
             Cookies.remove('hasCheckedOut');
             Cookies.set('hasVisitedThankYou', 'true', { expires: 1 });
             router.push('payment/thank-you');
          }).catch((error) => {
             alert('An error occurred while processing your payment. Please try again.');
+         }).finally(() => {
+            setLoading(false);
          });
       } else {
          alert('Please select a payment method');
@@ -84,9 +96,11 @@ export default function Payment() {
             </div>
             <button
                onClick={handlePayment}
-               className="mt-6 w-full px-6 py-3 bg-primary text-white rounded-md hover:bg-primary-dark transition-transform duration-300 ease-in-out transform hover:scale-105 shadow-lg focus:outline-none focus:ring-2 focus:ring-primary-light"
+               className={`mt-6 w-full px-6 py-3 bg-primary text-white rounded-md hover:bg-primary-dark transition-transform duration-300 ease-in-out transform hover:scale-105 shadow-lg focus:outline-none focus:ring-2 focus:ring-primary-light ${loading ? 'opacity-50 cursor-not-allowed' : ''
+                  }`}
+               disabled={loading}
             >
-               Complete Payment
+               {loading ? 'Processing...' : 'Complete Payment'}
             </button>
          </div>
       </div>

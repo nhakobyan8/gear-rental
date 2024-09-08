@@ -93,7 +93,7 @@ export default function ManageUsersPage() {
     <div className="container mx-auto p-8">
       <h2 className="text-3xl font-bold mb-6 text-text-dark">Manage Users</h2>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8 gap-6">
         {users.map((user) => (
           <div key={user._id} className="bg-background-dark border border-slate-400/20 rounded-lg shadow-md p-6">
             <div className="flex justify-between items-center mb-4">

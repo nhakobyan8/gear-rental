@@ -33,7 +33,7 @@ const orderSchema = new mongoose.Schema({
   },
   status: {
     type: String,
-    enum: ['paid', 'rented', 'returned', 'checked', 'completed'],
+    enum: ['paid', 'rented', 'completed'],
     default: 'paid',
   },
   paymentMethod: {
