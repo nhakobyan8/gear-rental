@@ -5,6 +5,7 @@ import Cookies from 'js-cookie';
 import { useDispatch } from 'react-redux';
 import { createOrder } from '@/features/orderSlice';
 import { clearCart } from '@/features/cartSlice';
+import { toast } from 'react-toastify';
 
 export default function Payment() {
    const [paymentMethod, setPaymentMethod] = useState('');
@@ -15,14 +16,16 @@ export default function Payment() {
 
    const handlePayment = async () => {
       if (!orderData) {
-         alert('Order data is missing. Please return to checkout.');
+         toast.error('Order data is missing. Please return to checkout.', {
+            position: "top-center",
+            theme: "dark"
+         });
          router.push('/checkout');
          return;
       }
 
       if (paymentMethod) {
          setLoading(true);
-         alert(`Processing payment with method: ${paymentMethod}`);
 
          const orderWithPayment = {
             user: {
@@ -34,19 +37,26 @@ export default function Payment() {
             paymentMethod,
          };
 
-         dispatch(createOrder(orderWithPayment)).then(() => {
+         try {
+            await dispatch(createOrder(orderWithPayment)).unwrap();
             dispatch(clearCart());
             Cookies.remove('orderData');
             Cookies.remove('hasCheckedOut');
             Cookies.set('hasVisitedThankYou', 'true', { expires: 1 });
             router.push('payment/thank-you');
-         }).catch((error) => {
-            alert('An error occurred while processing your payment. Please try again.');
-         }).finally(() => {
+         } catch (error) {
+            toast.error('An error occurred while processing your payment. Please try again.', {
+               position: "top-center",
+               theme: "dark"
+            });
+         } finally {
             setLoading(false);
-         });
+         }
       } else {
-         alert('Please select a payment method');
+         toast.error('Please select a payment method', {
+            position: "top-center",
+            theme: "dark"
+         });
       }
    };
 

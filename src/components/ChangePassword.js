@@ -2,6 +2,7 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { changeUserPassword, resetError, resetPasswordChangeSuccess } from "@/features/userSlice";
+import { toast } from "react-toastify";
 
 const ChangePassword = () => {
   const dispatch = useDispatch();
@@ -12,12 +13,9 @@ const ChangePassword = () => {
     confirmPassword: ""
   });
 
-  const [serverError, setServerError] = useState(null);
-
   const resetFeedback = () => {
     if (error) dispatch(resetError());
     if (passwordChangeSuccess) dispatch(resetPasswordChangeSuccess());
-    setServerError(null);
   };
 
 
@@ -37,28 +35,43 @@ const ChangePassword = () => {
     const { currentPassword, newPassword, confirmPassword } = passwordData;
 
     if (newPassword === currentPassword) {
-      setServerError("New password must be different from the current password.");
+      toast.error("New password must be different from the current password.", {
+        position: "top-center",
+        theme: "dark"
+      });
       return;
     }
 
     if (newPassword !== confirmPassword) {
-      setServerError("New passwords do not match.");
+      toast.error("New passwords do not match.", {
+        position: "top-center",
+        theme: "dark"
+      });
       return;
     }
 
     try {
       await dispatch(changeUserPassword({ currentPassword, newPassword })).unwrap();
-      setServerError(null);
-      setSuccess("Password changed successfully.");
+      toast.success("Password changed successfully.", {
+        position: "top-center",
+        theme: "dark"
+      });
       setPasswordData({
         currentPassword: "",
         newPassword: "",
         confirmPassword: ""
       });
     } catch (err) {
-      setServerError(err);
+      toast.error(`${err}`, {
+        position: "top-center",
+        theme: "dark"
+      });
     }
   };
+
+  if(error) {
+    return <div>Failed to change password</div>
+  }
 
   return (
     <div className="w-full py-5 h-full">
@@ -109,10 +122,6 @@ const ChangePassword = () => {
               disabled={loading}
             />
           </div>
-          {serverError && <p aria-live="assertive" className="text-red-500">{serverError}</p>}
-          {passwordChangeSuccess && (
-            <p aria-live="polite" className="text-green-500">Password changed successfully.</p>
-          )}
           <button
             type="submit"
             className={`w-full mt-4 bg-primary text-white py-2 rounded-md hover:bg-primary-dark duration-300 ease-in-out transform transition-colors shadow-lg focus:outline-none focus:ring-2 focus:ring-primary-light ${loading ? "opacity-50 cursor-not-allowed" : ""

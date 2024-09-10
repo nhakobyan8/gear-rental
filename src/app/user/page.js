@@ -5,6 +5,7 @@ import { fetchUserProfile, updateUserProfile } from '@/features/userSlice';
 import ChangePassword from '@/components/ChangePassword';
 import UserOrders from '@/components/UserOrders';
 import { FaSpinner, FaPencilAlt } from 'react-icons/fa';
+import { toast } from 'react-toastify';
 
 const UserProfile = () => {
   const dispatch = useDispatch();
@@ -12,8 +13,6 @@ const UserProfile = () => {
   const [isEditingUsername, setIsEditingUsername] = useState(false);
   const [username, setUsername] = useState("");
   const [isPasswordOpen, setIsPasswordOpen] = useState(false);
-  const [usernameError, setUsernameError] = useState(null);
-  const [usernameSuccess, setUsernameSuccess] = useState(null);
 
   useEffect(() => {
     dispatch(fetchUserProfile());
@@ -22,15 +21,19 @@ const UserProfile = () => {
 
   const handleUsernameSubmit = async (e) => {
     e.preventDefault();
-    setUsernameError(null);
-    setUsernameSuccess(null);
     try {
       await dispatch(updateUserProfile({ username })).unwrap();
       setIsEditingUsername(false);
-      setUsernameSuccess("Username updated successfully.");
+      toast.success("Username updated successfully.", {
+        position: "top-center",
+        theme: "dark"
+      });
       dispatch(fetchUserProfile());
     } catch (err) {
-      setUsernameError(`Failed to update username: ${err}`);
+      toast.error(`Failed to update username`, {
+        position: "top-center",
+        theme: "dark"
+      });
     }
   };
 
@@ -92,8 +95,6 @@ const UserProfile = () => {
                   </div>
                 )}
                 <p className="text-lg text-text mr-2"><strong>Email:</strong> {profile?.email}</p>
-                {usernameError && <p className="text-red-500 text-sm">{usernameError}</p>}
-                {usernameSuccess && <p className="text-green-500 text-sm">{usernameSuccess}</p>}
               </div>
               <button
                 onClick={togglePassword}

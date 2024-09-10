@@ -1,5 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 import Cookies from 'js-cookie';
+import { toast } from 'react-toastify';
 
 const getCartFromCookies = () => {
   const cart = Cookies.get('cartItems');
@@ -40,10 +41,12 @@ const cartSlice = createSlice({
           existingItem.totalPrice += newItem.price;
           state.totalAmount += newItem.price;
         } else {
-          alert("No more items available in stock.");
+          toast.warning("No more items available in stock.",{
+            position: "top-center",
+            theme: "dark"
+          });
         }
       }
-
       saveCartToCookies(state.items);
     },
     removeItemFromCart(state, action) {
@@ -66,7 +69,10 @@ const cartSlice = createSlice({
           existingItem.totalPrice += existingItem.price;
           state.totalAmount += existingItem.price;
         } else {
-          alert("No more items available in stock.");
+          toast.warning("No more items available in stock.", {
+            position: "top-center",
+            theme: "dark"
+          });
         }
         saveCartToCookies(state.items);
       }

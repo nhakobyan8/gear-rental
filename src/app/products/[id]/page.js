@@ -5,6 +5,7 @@ import Image from "next/image";
 import { useDispatch } from "react-redux";
 import { addItemToCart } from "@/features/cartSlice";
 import { FaSpinner } from "react-icons/fa";
+import { toast } from "react-toastify";
 
 const SinglePage = () => {
   const pathname = usePathname();
@@ -12,13 +13,11 @@ const SinglePage = () => {
   const productId = pathname.split('/').pop();
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
   const dispatch = useDispatch();
 
   useEffect(() => {
     const fetchProduct = async () => {
       setLoading(true);
-      setError(null);
       try {
         const response = await fetch(`/api/products/${productId}`);
         if (!response.ok) {
@@ -27,7 +26,10 @@ const SinglePage = () => {
         const data = await response.json();
         setProduct(data);
       } catch (error) {
-        setError(error.message || 'Error fetching product');
+        toast.error(error.message || 'Error fetching product', {
+          position: "top-center",
+          theme: "dark"
+        });
       } finally {
         setLoading(false);
       }
@@ -46,7 +48,7 @@ const SinglePage = () => {
         availableQuantity: product.availableQuantity,
       }));
     } catch (error) {
-      setError('Failed to add item to cart');
+      toast.error('Failed to add item to cart');
     }
   }, [dispatch, product]);
 
@@ -58,15 +60,6 @@ const SinglePage = () => {
     return (
       <div className="flex justify-center items-center h-64">
         <FaSpinner className="animate-spin text-4xl text-text-muted" />
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="flex flex-col items-center justify-center min-h-screen text-red-500">
-        <p>{error}</p>
-        <button onClick={goBack} className="mt-4 px-4 py-2 bg-primary text-white rounded-md hover:bg-primary-dark transition-colors">Go Back</button>
       </div>
     );
   }
@@ -100,7 +93,7 @@ const SinglePage = () => {
             <p className="text-lg text-text-muted mb-4">{product.description}</p>
             <p className="text-primary font-bold text-2xl mb-6">${product.price} per day</p>
 
-            <h2 className="text-xl font-semibold mb-2">Available Quantity: {product.availableQuantity}</h2>
+            {product.availableQuantity !== 0 && <h2 className="text-xl font-semibold mb-2">Available Quantity: {product.availableQuantity}</h2>}
             {product.availableQuantity === 0 && (
               <p className="text-red-500 mb-6">This product is currently out of stock for rental.</p>
             )}
@@ -134,9 +127,8 @@ const SinglePage = () => {
             <div className="mt-8 flex space-x-4">
               <button
                 onClick={addToCartHandler}
-                className={`px-6 py-3 bg-primary text-white rounded-md hover:bg-primary-dark transition-transform duration-300 ease-in-out transform hover:scale-105 shadow-lg focus:outline-none focus:ring-2 focus:ring-primary-light ${
-                  product.availableQuantity === 0 ? 'opacity-50 cursor-not-allowed' : ''
-                }`}
+                className={`px-6 py-3 bg-primary text-white rounded-md hover:bg-primary-dark transition-transform duration-300 ease-in-out transform hover:scale-105 shadow-lg focus:outline-none focus:ring-2 focus:ring-primary-light ${product.availableQuantity === 0 ? 'opacity-50 cursor-not-allowed' : ''
+                  }`}
                 disabled={product.availableQuantity === 0}
               >
                 Add to Cart

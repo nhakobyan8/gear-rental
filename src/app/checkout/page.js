@@ -7,6 +7,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { FaSpinner } from "react-icons/fa";
 import { useSelector } from "react-redux";
+import { toast } from "react-toastify";
 
 export default function Checkout() {
   const router = useRouter();
@@ -72,8 +73,11 @@ export default function Checkout() {
       };
       Cookies.set('orderData', JSON.stringify(orderData));
       Cookies.set('hasCheckedOut', 'true');
+      toast.success("Proceeding to payment.", {
+        position: "top-center",
+        theme: "dark"
+      });
       router.push('/payment');
-
     }
   }, [formData, cartItems, totalAmount, validateForm, session, router]);
 

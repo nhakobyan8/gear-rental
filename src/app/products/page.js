@@ -3,12 +3,12 @@ import Filter from '@/components/Filter';
 import ProductCard from '@/components/ProductCard';
 import React, { useEffect, useMemo, useState } from 'react';
 import { FaSpinner } from 'react-icons/fa';
+import { toast } from 'react-toastify';
 
 const Products = () => {
   const [products, setProducts] = useState([]);
   const [filteredProducts, setFilteredProducts] = useState(products);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
 
   const options = useMemo(() => {
     const brands = [...new Set(products.map(product => product.brand))];
@@ -19,7 +19,6 @@ const Products = () => {
   useEffect(() => {
     async function fetchProducts() {
       setLoading(true);
-      setError(null);
       try {
         const response = await fetch('/api/products');
         if (!response.ok) {
@@ -28,7 +27,10 @@ const Products = () => {
         const data = await response.json();
         setProducts(data);
       } catch (error) {
-        setError('Failed to load products');
+        toast.error('Failed to load products.', {
+          position: "top-center",
+          theme: "dark"
+        });
       } finally {
         setLoading(false);
       }
@@ -36,6 +38,7 @@ const Products = () => {
 
     fetchProducts();
   }, []);
+
   if (loading) {
     return (
       <div className="flex justify-center items-center h-64">
@@ -43,11 +46,7 @@ const Products = () => {
       </div>
     )
   }
-  if (error) {
-    return (
-      <div className="text-center text-red-500">{error}</div>
-    )
-  }
+
 
   return (
     <div className="min-h-screen bg-background-light text-text px-3 py-12">

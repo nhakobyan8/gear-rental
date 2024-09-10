@@ -3,6 +3,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { useDispatch } from 'react-redux';
 import { addItemToCart } from '@/features/cartSlice';
+import { toast } from 'react-toastify';
 
 const ProductCard = ({ product }) => {
   const productUrl = `/products/${product._id}`;
@@ -10,10 +11,9 @@ const ProductCard = ({ product }) => {
 
   const addToCartHandler = () => {
     if (product.availableQuantity === 0) {
-      alert('Product is out of stock');
+      toast.error('Product is out of stock');
       return;
     }
-
     dispatch(addItemToCart({
       _id: product._id,
       name: product.name,
@@ -41,7 +41,7 @@ const ProductCard = ({ product }) => {
         <h3 className="text-xl font-semibold text-nowrap">{product.name}</h3>
         <p className="text-text-muted mt-2">{product.description}</p>
 
-        <p className={`mt-2 ${product.availableQuantity === 0 ? 'text-red-500' : 'text-green-500'}`}>
+        <p className={`mt-2 text-nowrap ${product.availableQuantity === 0 ? 'text-red-500' : 'text-green-500'}`}>
           {product.availableQuantity > 0 
             ? `Available: ${product.availableQuantity}` 
             : 'Out of Stock'}

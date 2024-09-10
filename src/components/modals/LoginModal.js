@@ -5,11 +5,12 @@ import { useDispatch, useSelector } from "react-redux";
 import { loginUser } from "@/features/userSlice";
 import { signIn } from "next-auth/react";
 import Modal from "./Modal";
+import { toast } from "react-toastify";
 
 export default function LoginModal({ isOpen, onClose }) {
    const [formData, setFormData] = useState({ email: "", password: "" });
    const dispatch = useDispatch();
-   const { loading, error } = useSelector((state) => state.users);
+   const { loading } = useSelector((state) => state.users);
    const router = useRouter();
 
    const handleInputChange = useCallback((e) => {
@@ -21,18 +22,30 @@ export default function LoginModal({ isOpen, onClose }) {
       async (e) => {
          e.preventDefault();
 
-         const action = await dispatch(loginUser({ email: formData.email, password: formData.password })).unwrap();
-
-         if (!action.error) {
-            router.push("/");
-            onClose();
-         };
-
-      }, [dispatch, formData, router]);
-
+         try {
+            const action = await dispatch(loginUser({ email: formData.email, password: formData.password })).unwrap();
+            if (!action.error) {
+               toast.success("Logged in successfully!", {
+                  position: "top-center",
+                  theme: "dark"
+               });
+               router.push("/");
+               onClose();
+            }
+         } catch (err) {
+            toast.error("Login failed. Please check your credentials.", {
+               position: "top-center",
+               theme: "dark"
+            });
+         }
+      }, [dispatch, formData, router, onClose]);
 
    const handleGoogleSignIn = useCallback(() => {
       signIn("google", { callbackUrl: "/" });
+      toast.info("Redirecting to Google sign-in...", {
+         position: "top-center",
+         theme: "dark"
+      });
    }, []);
 
    return (
@@ -76,7 +89,6 @@ export default function LoginModal({ isOpen, onClose }) {
             >
                Sign in with Google
             </button>
-            {error && <p className="text-red-500 text-center mt-4">{error}</p>}
          </form>
       </Modal>
 

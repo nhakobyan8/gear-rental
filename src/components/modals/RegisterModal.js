@@ -3,6 +3,7 @@ import { useState, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { registerUser } from "@/features/userSlice";
 import Modal from "./Modal";
+import { toast } from "react-toastify";
 
 export default function RegisterModal({ isOpen, onClose }) {
    const [formData, setFormData] = useState({
@@ -14,7 +15,7 @@ export default function RegisterModal({ isOpen, onClose }) {
 
    const [isCodeSent, setIsCodeSent] = useState(false);
    const dispatch = useDispatch();
-   const { loading, error } = useSelector((state) => state.users);
+   const { loading } = useSelector((state) => state.users);
 
 
    const handleInputChange = useCallback((e) => {
@@ -30,32 +31,49 @@ export default function RegisterModal({ isOpen, onClose }) {
             try {
                const action = await dispatch(registerUser({ ...formData, isRegister: true }));
                if (!action.error) {
-                  alert("Confirmation code sent to your email. Please check your email.");
+                  toast.info("Confirmation code sent to your email. Please check your email.", {
+                     position: "top-center",
+                     theme: "dark"
+                  });
                   setIsCodeSent(true);
+               
                } else {
-                  alert(action.payload);
+                  toast.error(action.payload, {
+                     position: "top-center",
+                     theme: "dark"
+                  });
                }
             } catch (error) {
-               console.error("Registration error:", error);
+               toast.error("Registration error. Please try again.", {
+                  position: "top-center",
+                  theme: "dark"
+               });
             }
          } else {
             try {
                const action = await dispatch(registerUser({ ...formData, isRegister: true, isCodeSent: true }));
                if (!action.error) {
-                  alert("Registration successful! You can now log in.");
+                  toast.success("Registration successful! You can now log in.", {
+                     position: "top-center",
+                     theme: "dark"
+                  });
                   onClose();
                   setIsCodeSent(false);
                   setFormData({ email: "", password: "", username: "", confirmationCode: "" });
                } else {
-                  alert(action.payload);
+                  toast.error(action.payload, {
+                     position: "top-center",
+                     theme: "dark"
+                  });
                }
             } catch (error) {
-               console.error("Error during code confirmation:", error);
+               toast.error("Error during code confirmation. Please try again.", {
+                  position: "top-center",
+                  theme: "dark"
+               });
             }
          }
-      },
-      [dispatch, formData, isCodeSent, onClose]
-   );
+      }, [dispatch, formData, isCodeSent, onClose]);
 
    return (
       <Modal isOpen={isOpen} onClose={onClose}>
@@ -115,7 +133,6 @@ export default function RegisterModal({ isOpen, onClose }) {
             >
                {loading ? "Processing..." : isCodeSent ? "Create Account" : "Send Code"}
             </button>
-            {error && <p className="text-red-500 text-center mt-4">{error}</p>}
          </form>
       </Modal>
    );
