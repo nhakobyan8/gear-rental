@@ -25,7 +25,7 @@ const testimonials = [
   },
   {
     testimonial: '"The support team was very helpful and the equipment was top-notch. Will rent again."',
-    name: '- Jamie',
+    name: '- Kane',
   },
   {
     testimonial: '"Excellent service and great prices. GearRental made our project a success."',
