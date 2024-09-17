@@ -1,12 +1,11 @@
 "use client";
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useEffect, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import Image from "next/image";
 import { useDispatch } from "react-redux";
 import { addItemToCart } from "@/features/cartSlice";
 import { FaSpinner } from "react-icons/fa";
 import { toast } from "react-toastify";
-import Link from "next/link";
 import ProductCard from "@/components/ProductCard";
 
 const SinglePage = () => {
@@ -84,11 +83,6 @@ const SinglePage = () => {
     }
   };
 
-
-  const goBack = useCallback(() => {
-    router.back();
-  }, [router]);
-
   if (loading) {
     return (
       <div className="flex justify-center items-center h-64">
@@ -102,7 +96,7 @@ const SinglePage = () => {
       <div className="flex flex-col items-center justify-center min-h-screen">
         <p>Product not found</p>
         <button
-          onClick={goBack}
+          onClick={() => router.back()}
           className="mt-4 px-4 py-2 bg-primary text-white rounded-md hover:bg-primary-dark transition-colors"
         >
           Go Back
@@ -131,7 +125,7 @@ const SinglePage = () => {
             <p className="text-lg text-text-muted mb-4">{product.description}</p>
             <p className="text-primary font-bold text-3xl mb-6">${product.price} per day</p>
 
-            {product.availableQuantity !== 0 ? (
+            {product.availableQuantity ? (
               <h2 className="text-xl font-semibold text-green-500 mb-4">In Stock: {product.availableQuantity}</h2>
             ) : (
               <p className="text-red-500 text-lg mb-6">Currently out of stock for rental.</p>
@@ -174,12 +168,12 @@ const SinglePage = () => {
           <button
             onClick={() => addToCartHandler(product)}
             className={`px-6 py-3 bg-primary text-white rounded-lg hover:bg-primary-dark transition duration-300 ease-in-out transform shadow-lg focus:outline-none focus:ring-2 focus:ring-primary-light ${product.availableQuantity === 0 ? 'opacity-50 cursor-not-allowed' : ''}`}
-            disabled={product.availableQuantity === 0}
+            disabled={!product.availableQuantity}
           >
             Add to Cart
           </button>
           <button
-            onClick={goBack}
+            onClick={() => router.back()}
             className="px-6 py-3 border border-slate-400 bg-secondary text-white rounded-lg hover:bg-secondary-dark transition duration-300 ease-in-out transform hover:scale-105 shadow-lg focus:outline-none focus:ring-2 focus:ring-secondary-light"
           >
             Go Back
