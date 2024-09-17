@@ -3,17 +3,12 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { useDispatch } from 'react-redux';
 import { addItemToCart } from '@/features/cartSlice';
-import { toast } from 'react-toastify';
 
 const ProductCard = ({ product }) => {
   const productUrl = `/products/${product._id}`;
   const dispatch = useDispatch();
 
   const addToCartHandler = () => {
-    if (product.availableQuantity === 0) {
-      toast.error('Product is out of stock');
-      return;
-    }
     dispatch(addItemToCart({
       _id: product._id,
       name: product.name,
@@ -55,7 +50,7 @@ const ProductCard = ({ product }) => {
             className={`px-4 py-2 bg-primary text-white rounded-md  transition-transform duration-300 ease-in-out transform  shadow-lg focus:outline-none focus:ring-2 focus:ring-primary-light ${
               product.availableQuantity === 0 ? 'opacity-50 cursor-not-allowed' : 'hover:scale-105 hover:bg-primary-dark'
             }`}
-            disabled={product.availableQuantity === 0}
+            disabled={product.quantity === product.availableQuantity}
           >
             Add to Cart
           </button>

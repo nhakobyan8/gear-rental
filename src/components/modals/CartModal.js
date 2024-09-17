@@ -9,7 +9,6 @@ import Image from "next/image";
 export default function CartModal({ isCartOpen, toggleCart }) {
    const cartItems = useSelector((state) => state.cart.items);
    const dispatch = useDispatch();
-
    const totalAmount = cartItems.reduce((total, item) => total + item.totalPrice, 0);
 
    const handleIncreaseQuantity = (id) => {
@@ -58,7 +57,8 @@ export default function CartModal({ isCartOpen, toggleCart }) {
                                     </button>
                                     <span className="text-text-dark">{item.quantity}</span>
                                     <button
-                                       className="text-white"
+                                       className={`${item.quantity === item.availableQuantity && 'opacity-50 cursor-not-allowed'} text-white`}
+                                       disabled={item.quantity === item.availableQuantity}
                                        onClick={() => handleIncreaseQuantity(item._id)}
                                     >
                                        <CiCirclePlus size={30} />

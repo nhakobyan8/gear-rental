@@ -40,12 +40,7 @@ const cartSlice = createSlice({
           existingItem.quantity++;
           existingItem.totalPrice += newItem.price;
           state.totalAmount += newItem.price;
-        } else {
-          toast.warning("No more items available in stock.",{
-            position: "top-center",
-            theme: "dark"
-          });
-        }
+        } 
       }
       saveCartToCookies(state.items);
     },
@@ -68,11 +63,6 @@ const cartSlice = createSlice({
           existingItem.quantity++;
           existingItem.totalPrice += existingItem.price;
           state.totalAmount += existingItem.price;
-        } else {
-          toast.warning("No more items available in stock.", {
-            position: "top-center",
-            theme: "dark"
-          });
         }
         saveCartToCookies(state.items);
       }
