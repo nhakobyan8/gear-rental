@@ -60,7 +60,7 @@ export default function About() {
               {testimonials.map((testimonial, index) => (
                 <div
                   key={index}
-                  className="space-y-4 bg-background-light p-6 rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300 ease-in-out"
+                  className="space-y-4 border border-slate-400/20 bg-background-light p-6 rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300 ease-in-out"
                 >
                   <p>{testimonial.testimonial}</p>
                   <p className="text-lg font-semibold">{testimonial.name}</p>

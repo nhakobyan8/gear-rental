@@ -9,7 +9,7 @@ export default function ManageUsersPage() {
   const [error, setError] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [currentUser, setCurrentUser] = useState(null);
-  
+
   async function fetchUsers() {
     try {
       const response = await fetch("/api/admin/users");
@@ -122,15 +122,12 @@ export default function ManageUsersPage() {
           </div>
         ))}
       </div>
-
-      {isModalOpen && (
-        <EditUserModal
-          isOpen={isModalOpen}
-          onClose={() => setIsModalOpen(false)}
-          onSave={handleSave}
-          user={currentUser}
-        />
-      )}
+      <EditUserModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onSave={handleSave}
+        user={currentUser}
+      />
     </div>
   );
 }

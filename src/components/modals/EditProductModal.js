@@ -98,177 +98,96 @@ export default function EditProductModal({ isOpen, onClose, onSave, product, mod
     onSave(updatedProduct);
   };
 
-  return (
-    <Modal onClose={onClose} isOpen={isOpen}>
-      <div onClick={(e) => e.stopPropagation()} className="bg-background-light relative rounded-lg shadow-lg overflow-y-auto max-h-96">
-        <h2 className="text-3xl font-bold mb-6 text-text-dark">
-          {modalType === 'edit' ? 'Edit Product' : 'Add Product'}
-        </h2>
-        <form onSubmit={handleSubmit}>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-            <div className="col-span-1">
-              <label className="block text-text-muted mb-2">Product Name</label>
-              <input
-                type="text"
-                name="name"
-                className="w-full p-3 bg-background-dark text-white border border-gray-600 rounded"
-                value={formData.name}
-                onChange={handleInputChange}
-                required
-              />
-            </div>
-            <div className="col-span-1">
-              <label className="block text-text-muted mb-2">Price</label>
-              <input
-                type="number"
-                name="price"
-                step="0.01"
-                className="w-full p-3 bg-background-dark text-white border border-gray-600 rounded"
-                value={formData.price}
-                onChange={handleInputChange}
-                required
-              />
-            </div>
-            <div className="col-span-1">
-              <label className="block text-text-muted mb-2">Total Quantity</label>
-              <input
-                type="number"
-                name="totalQuantity"
-                className="w-full p-3 bg-background-dark text-white border border-gray-600 rounded"
-                value={formData.totalQuantity}
-                onChange={handleInputChange}
-                required
-              />
-            </div>
-            <div className="col-span-1">
-              <label className="block text-text-muted mb-2">Available Quantity</label>
-              <input
-                type="number"
-                name="availableQuantity"
-                className="w-full p-3 bg-background-dark text-white border border-gray-600 rounded"
-                value={formData.availableQuantity}
-                onChange={handleInputChange}
-                required
-              />
-            </div>
-            <div className="col-span-1 md:col-span-2">
-              <label className="block text-text-muted mb-2">Image URL</label>
-              <input
-                type="text"
-                name="imageUrl"
-                className="w-full p-3 bg-background-dark text-white border border-gray-600 rounded"
-                value={formData.imageUrl}
-                onChange={handleInputChange}
-                required
-              />
-            </div>
-            <div className="col-span-1 md:col-span-2">
-              <label className="block text-text-muted mb-2">Description</label>
-              <textarea
-                name="description"
-                className="w-full p-3 bg-background-dark text-white border border-gray-600 rounded"
-                value={formData.description}
-                onChange={handleInputChange}
-                required
-              />
-            </div>
-            <div className="col-span-1">
-              <label className="block text-text-muted mb-2">Category</label>
-              <input
-                type="text"
-                name="category"
-                className="w-full p-3 bg-background-dark text-white border border-gray-600 rounded"
-                value={formData.category}
-                onChange={handleInputChange}
-                required
-              />
-            </div>
-            <div className="col-span-1">
-              <label className="block text-text-muted mb-2">Brand</label>
-              <input
-                type="text"
-                name="brand"
-                className="w-full p-3 bg-background-dark text-white border border-gray-600 rounded"
-                value={formData.brand}
-                onChange={handleInputChange}
-                required
-              />
-            </div>
-            <div className="col-span-1 md:col-span-2">
-              <label className="block text-text-muted mb-2">Features (comma separated)</label>
-              <input
-                type="text"
-                name="features"
-                className="w-full p-3 bg-background-dark text-white border border-gray-600 rounded"
-                value={formData.features}
-                onChange={handleInputChange}
-              />
-            </div>
-          </div>
+return (
+  <Modal width='sm:w-1/2 w-full' onClose={onClose} isOpen={isOpen}>
+    <div
+      onClick={(e) => e.stopPropagation()}
+      className="bg-background-light relative rounded-lg overflow-y-auto max-h-screen py-3 sm:px-8 transition-all ease-out duration-300"
+    >
+      <h2 className="text-2xl sm:text-3xl font-bold mb-4 sm:mb-6 text-text-dark text-center">
+        {modalType === 'edit' ? 'Edit Product' : 'Add Product'}
+      </h2>
 
-          <div className="mt-6">
-            <h3 className="text-lg font-semibold text-text-dark mb-4">Specifications</h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="col-span-1">
-                <label className="block text-text-muted mb-2">Weight</label>
-                <input
-                  type="text"
-                  name="weight"
-                  className="w-full p-3 bg-background-dark text-white border border-gray-600 rounded"
-                  value={formData.specifications.weight}
-                  onChange={handleSpecificationsChange}
+      <form onSubmit={handleSubmit}>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
+          {[
+            { label: "Product Name", name: "name", type: "text" },
+            { label: "Price", name: "price", type: "number", step: "0.01" },
+            { label: "Total Quantity", name: "totalQuantity", type: "number" },
+            { label: "Available Quantity", name: "availableQuantity", type: "number" },
+            { label: "Image URL", name: "imageUrl", type: "text" },
+            { label: "Description", name: "description", type: "textarea" },
+            { label: "Category", name: "category", type: "text" },
+            { label: "Brand", name: "brand", type: "text" },
+            { label: "Features (comma separated)", name: "features", type: "text" },
+          ].map(({ label, name, type, step }, idx) => (
+            <div key={idx} className="col-span-1">
+              <label className="block text-text-muted mb-1">{label}</label>
+              {type === 'textarea' ? (
+                <textarea
+                  name={name}
+                  className="w-full p-3 bg-background-dark text-white border border-gray-600 rounded focus:border-primary transition"
+                  value={formData[name]}
+                  onChange={handleInputChange}
+                  required
                 />
-              </div>
-              <div className="col-span-1">
-                <label className="block text-text-muted mb-2">Dimensions</label>
+              ) : (
                 <input
-                  type="text"
-                  name="dimensions"
-                  className="w-full p-3 bg-background-dark text-white border border-gray-600 rounded"
-                  value={formData.specifications.dimensions}
-                  onChange={handleSpecificationsChange}
+                  type={type}
+                  name={name}
+                  step={step}
+                  className="w-full p-3 bg-background-dark text-white border border-gray-600 rounded focus:border-primary transition"
+                  value={formData[name]}
+                  onChange={handleInputChange}
+                  required
                 />
-              </div>
-              <div className="col-span-1">
-                <label className="block text-text-muted mb-2">Brand</label>
-                <input
-                  type="text"
-                  name="brand"
-                  className="w-full p-3 bg-background-dark text-white border border-gray-600 rounded"
-                  value={formData.specifications.brand}
-                  onChange={handleSpecificationsChange}
-                />
-              </div>
-              <div className="col-span-1">
-                <label className="block text-text-muted mb-2">Model</label>
-                <input
-                  type="text"
-                  name="model"
-                  className="w-full p-3 bg-background-dark text-white border border-gray-600 rounded"
-                  value={formData.specifications.model}
-                  onChange={handleSpecificationsChange}
-                />
-              </div>
+              )}
             </div>
-          </div>
+          ))}
+        </div>
 
-          <div className="flex justify-end space-x-4 mt-8">
-            <button
-              type="button"
-              className="bg-gray-600 text-white px-4 py-2 rounded hover:bg-gray-700"
-              onClick={onClose}
-            >
-              Cancel
-            </button>
-            <button
-              type="submit"
-              className="bg-primary-dark text-white px-4 py-2 rounded hover:bg-primary"
-            >
-              {modalType === 'edit' ? 'Save Changes' : 'Add Product'}
-            </button>
+        <div className="mt-6">
+          <h3 className="text-lg font-semibold text-text-dark mb-4">Specifications</h3>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
+            {[
+              { label: "Weight", name: "weight" },
+              { label: "Dimensions", name: "dimensions" },
+              { label: "Brand", name: "brand" },
+              { label: "Model", name: "model" },
+            ].map(({ label, name }, idx) => (
+              <div key={idx} className="col-span-1">
+                <label className="block text-text-muted mb-1">{label}</label>
+                <input
+                  type="text"
+                  name={name}
+                  className="w-full p-3 bg-background-dark text-white border border-gray-600 rounded focus:border-primary transition"
+                  value={formData.specifications[name]}
+                  onChange={handleSpecificationsChange}
+                />
+              </div>
+            ))}
           </div>
-        </form>
-      </div>
-    </Modal>
-  );
+        </div>
+
+        <div className="flex justify-end space-x-4 mt-8">
+          <button
+            type="button"
+            className="bg-gray-600 text-white px-4 py-2 rounded hover:bg-gray-700 transition"
+            onClick={onClose}
+          >
+            Cancel
+          </button>
+          <button
+            type="submit"
+            className="bg-primary-dark text-white px-4 py-2 rounded hover:bg-primary transition"
+          >
+            {modalType === 'edit' ? 'Save Changes' : 'Add Product'}
+          </button>
+        </div>
+      </form>
+    </div>
+  </Modal>
+);
+
+  
 }

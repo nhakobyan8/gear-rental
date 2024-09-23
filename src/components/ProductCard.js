@@ -19,7 +19,7 @@ const ProductCard = ({ product }) => {
   };
 
   return (
-    <div className="bg-background p-5 pt-0 flex flex-col justify-between rounded-lg shadow-lg hover:shadow-2xl transition-all duration-300 cursor-pointer">
+    <div className="bg-background border border-slate-400/20 p-5 pt-0 flex flex-col justify-between rounded-lg shadow-lg hover:shadow-2xl transition-all duration-300 cursor-pointer">
       <Link href={productUrl} passHref>
         <div className="relative h-60 w-full mb-4">
           <Image

@@ -37,19 +37,19 @@ const Home = () => {
   return (
     <div className="flex flex-col items-center justify-center min-h-screen text-center bg-gradient-to-b from-background-light via-background to-background-light">
       <div
+        className="min-h-[600px] w-full flex flex-col items-center justify-center bg-center bg-cover"
         style={{ backgroundImage: `url("/images/home.webp")` }}
-        className="min-h-[600px] w-full flex flex-col items-center bg-center justify-center bg-cover"
       >
-        <div className="flex flex-col bg-black bg-opacity-50 w-full min-h-[600px] items-center justify-center">
-          <h1 className="text-5xl md:text-6xl font-extrabold text-text drop-shadow-md animate-fade-in-up">
+        <div className="flex flex-col bg-black bg-opacity-60 w-full min-h-[600px] items-center justify-center px-4 md:px-10 py-8">
+          <h1 className="text-5xl md:text-6xl font-extrabold text-white drop-shadow-lg animate-fade-in-up">
             Welcome to GearRental
           </h1>
-          <p className="mt-4 px-5 text-lg md:text-2xl text-text-muted drop-shadow-sm animate-fade-in-up">
+          <p className="mt-4 text-center text-lg md:text-2xl text-gray-300 drop-shadow-md animate-fade-in-up max-w-2xl">
             Rent top-notch sound equipment at affordable prices.
           </p>
-          <div className="mt-10 w-full md:w-auto">
+          <div className="mt-8 w-full md:w-auto">
             <Link
-              className="inline-block mt-4 text-lg md:text-xl px-6 py-3 bg-primary text-white rounded-md hover:bg-primary-dark transition-transform duration-300 ease-in-out transform hover:scale-105 shadow-lg focus:outline-none focus:ring-2 focus:ring-primary-light"
+              className="inline-block text-lg md:text-xl px-6 py-3 bg-primary text-white rounded-md hover:bg-primary-dark transition-transform duration-300 ease-in-out transform hover:scale-105 shadow-lg focus:outline-none focus:ring-2 focus:ring-primary-light focus:ring-opacity-50"
               href="/products"
               aria-label="Explore our products"
             >
@@ -59,6 +59,7 @@ const Home = () => {
         </div>
       </div>
 
+
       <div className="px-3">
         <section className="mt-20 max-w-4xl mx-auto">
           <h2 className="text-3xl md:text-4xl font-bold text-text">Why Choose GearRental?</h2>
@@ -66,7 +67,7 @@ const Home = () => {
             {features.map((item, index) => (
               <div
                 key={index}
-                className="space-y-4 text-center md:text-left bg-background p-6 rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300 ease-in-out"
+                className="space-y-4 border border-slate-400/20 text-center md:text-left bg-background p-6 rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300 ease-in-out"
               >
                 <h3 className="text-2xl font-semibold">{item.title}</h3>
                 <p>{item.description}</p>
@@ -82,7 +83,7 @@ const Home = () => {
             {testimonials.map((testimonial, index) => (
               <div
                 key={index}
-                className="space-y-4 bg-background-light p-6 rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300 ease-in-out"
+                className="space-y-4 border border-slate-400/20 bg-background-light p-6 rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300 ease-in-out"
               >
                 <p>{testimonial.testimonial}</p>
                 <p className="text-lg font-semibold">{testimonial.name}</p>

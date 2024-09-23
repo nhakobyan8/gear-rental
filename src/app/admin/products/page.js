@@ -129,15 +129,15 @@ export default function ManageProductsPage() {
             ))}
          </div>
 
-         {isModalOpen && (
-            <EditProductModal
-               isOpen={isModalOpen}
-               onClose={closeModal}
-               onSave={handleSave}
-               product={currentProduct}
-               modalType={modalType}
-            />
-         )}
+
+         <EditProductModal
+            isOpen={isModalOpen}
+            onClose={closeModal}
+            onSave={handleSave}
+            product={currentProduct}
+            modalType={modalType}
+         />
+
       </div>
    );
 }

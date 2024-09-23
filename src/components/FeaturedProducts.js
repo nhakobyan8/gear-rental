@@ -34,7 +34,7 @@ export default function FeaturedProducts() {
          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-10 text-text-muted">
             {products.map((product) => (
                <div key={product.id}
-                  className="space-y-4 bg-background-light p-6 min-h-40 rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300 ease-in-out" >
+                  className="space-y-4 border border-slate-400/20 bg-background-light p-6 min-h-40 rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300 ease-in-out" >
                   <Link
                      href={`/products/${product._id}`}
 
