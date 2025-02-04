@@ -157,10 +157,7 @@ const userSlice = createSlice({
             state.loading = false;
             state.profile = action.payload.user;
          })
-         .addCase(loginUser.rejected, (state, action) => {
-            state.loading = false;
-            state.error = action.payload;
-         });
+         
    },
 });
 
